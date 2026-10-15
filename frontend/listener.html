@@ -1,0 +1,4521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MELO — Listener Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* =========================================
+           LISTENER DASHBOARD
+           ========================================= */
+
+        .listener-dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 8% 160px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 50px;
+        }
+
+        .dashboard-header h1 {
+            font-size: clamp(40px, 5vw, 68px);
+            line-height: 1;
+            letter-spacing: -3px;
+            margin: 10px 0 18px;
+        }
+
+        .dashboard-header p {
+            color: #888;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .dashboard-user {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 15px;
+            border: 1px solid #333;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #aaa;
+            font-size: 13px;
+        }
+
+        .dashboard-user-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #7CFF9B;
+        }
+
+
+        /* =========================================
+           DASHBOARD GRID
+           ========================================= */
+
+        .listener-dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .listener-dashboard-card {
+            padding: 28px;
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 22px;
+            min-height: 220px;
+            box-sizing: border-box;
+        }
+
+        .listener-dashboard-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .listener-dashboard-card h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+            letter-spacing: -0.8px;
+        }
+
+        .dashboard-card-description {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .dashboard-placeholder {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px dashed #333;
+            color: #666;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           RECENTLY PLAYED
+           ========================================= */
+
+        .recent-dashboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .recent-dashboard-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .recent-dashboard-art {
+            width: 58px;
+            height: 58px;
+            min-width: 58px;
+            object-fit: cover;
+            border-radius: 10px;
+            background: #181818;
+        }
+
+        .recent-dashboard-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .recent-dashboard-title {
+            color: #eee;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .recent-dashboard-artist {
+            color: #888;
+            font-size: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .recent-dashboard-meta {
+            color: #666;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .recent-dashboard-play,
+        .dashboard-playlist-play,
+        .dashboard-recommended-play,
+        .dashboard-history-play {
+            border: 1px solid #333;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recent-dashboard-play {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 50%;
+        }
+
+        .recent-empty,
+        .followed-empty,
+        .recommendation-empty,
+        .history-empty {
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px dashed #333;
+            color: #666;
+            font-size: 13px;
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           PLAYLISTS
+           ========================================= */
+
+        .dashboard-playlists-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .dashboard-playlist {
+            padding: 16px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .dashboard-playlist-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .dashboard-playlist-name {
+            color: #eee;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .dashboard-playlist-count {
+            color: #777;
+            font-size: 11px;
+        }
+
+        .dashboard-playlist-songs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dashboard-playlist-song {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .dashboard-playlist-song-art {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .dashboard-playlist-song-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dashboard-playlist-song-title {
+            color: #ddd;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dashboard-playlist-song-artist {
+            color: #666;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .dashboard-playlist-play {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 50%;
+        }
+
+        .dashboard-playlist-empty {
+            color: #666;
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           FOLLOWED ARTISTS
+           ========================================= */
+
+        .dashboard-followed-artists {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .dashboard-followed-artist {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .dashboard-followed-artist-avatar {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #181818;
+        }
+
+        .dashboard-followed-artist-info {
+            min-width: 0;
+        }
+
+        .dashboard-followed-artist-name {
+            color: #eee;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dashboard-followed-artist-label {
+            color: #666;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+
+        /* =========================================
+           RECOMMENDED
+           ========================================= */
+
+        .dashboard-recommended-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .dashboard-recommended-card {
+            overflow: hidden;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .dashboard-recommended-art-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+        }
+
+        .dashboard-recommended-art {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .dashboard-recommended-play {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .dashboard-recommended-info {
+            padding: 12px;
+        }
+
+        .dashboard-recommended-title {
+            color: #eee;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dashboard-recommended-artist {
+            color: #888;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .dashboard-recommended-meta {
+            color: #666;
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+
+        /* =========================================
+           LISTENING HISTORY
+           ========================================= */
+
+        .dashboard-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dashboard-history-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 11px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .dashboard-history-number {
+            width: 28px;
+            min-width: 28px;
+            color: #555;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .dashboard-history-art {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            object-fit: cover;
+            border-radius: 9px;
+        }
+
+        .dashboard-history-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .dashboard-history-title {
+            color: #eee;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .dashboard-history-artist {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .dashboard-history-meta {
+            color: #666;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+
+        .dashboard-history-play {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 50%;
+        }
+
+
+        /* =========================================
+           PROFILE & PREFERENCES
+           ========================================= */
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .profile-section {
+            padding: 22px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .profile-section h3 {
+            margin: 0 0 18px;
+            font-size: 17px;
+            color: #eee;
+        }
+
+        .profile-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .profile-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .profile-field label {
+            color: #777;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .profile-field input,
+        .profile-field select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px 14px;
+            border-radius: 11px;
+            border: 1px solid #292929;
+            background: #111;
+            color: #eee;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .profile-field input:focus,
+        .profile-field select:focus {
+            border-color: #555;
+        }
+
+        .profile-field input[readonly] {
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .preference-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 14px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .preference-row:last-child {
+            border-bottom: none;
+        }
+
+        .preference-info {
+            min-width: 0;
+        }
+
+        .preference-title {
+            color: #eee;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .preference-description {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+
+        .preference-row select {
+            width: 150px;
+            padding: 9px 10px;
+            border-radius: 9px;
+            border: 1px solid #292929;
+            background: #111;
+            color: #eee;
+        }
+
+        .toggle {
+            position: relative;
+            width: 46px;
+            height: 25px;
+            flex-shrink: 0;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+            border-radius: 30px;
+            background: #292929;
+            transition: 0.2s;
+        }
+
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 19px;
+            height: 19px;
+            left: 3px;
+            top: 3px;
+            border-radius: 50%;
+            background: #888;
+            transition: 0.2s;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: #fff;
+        }
+
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(21px);
+            background: #000;
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .profile-save-btn,
+        .profile-reset-btn {
+            padding: 11px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+
+        .profile-save-btn {
+            border: none;
+            background: #fff;
+            color: #000;
+        }
+
+        .profile-reset-btn {
+            border: 1px solid #333;
+            background: transparent;
+            color: #aaa;
+        }
+
+        .profile-message {
+            min-height: 18px;
+            margin-top: 14px;
+            color: #7CFF9B;
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           NAVIGATION
+           ========================================= */
+
+        .dashboard-nav-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+
+        /* =========================================
+           PREMIUM DASHBOARD MUSIC PLAYER
+           ========================================= */
+
+        body {
+            padding-bottom: 125px;
+        }
+
+        .dashboard-music-player {
+            position: fixed;
+
+            left: 24px;
+            right: 24px;
+            bottom: 20px;
+
+            z-index: 9999;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(25, 25, 25, 0.97),
+                    rgba(10, 10, 10, 0.98)
+                );
+
+            border: 1px solid rgba(255, 255, 255, 0.10);
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.55),
+                0 0 0 1px rgba(255, 255, 255, 0.025);
+
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+
+            opacity: 0;
+
+            transform: translateY(120px);
+
+            pointer-events: none;
+
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .dashboard-music-player.active {
+            opacity: 1;
+
+            transform: translateY(0);
+
+            pointer-events: auto;
+        }
+
+        .dashboard-player-inner {
+            min-height: 78px;
+
+            padding: 12px 18px;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(190px, 1fr)
+                minmax(300px, 1.5fr)
+                minmax(150px, 0.7fr);
+
+            align-items: center;
+
+            gap: 24px;
+
+            box-sizing: border-box;
+        }
+
+
+        /* =========================================
+           PLAYER SONG
+           ========================================= */
+
+        .dashboard-player-song {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            min-width: 0;
+        }
+
+        #dashboardPlayerArt {
+            width: 54px;
+            height: 54px;
+
+            min-width: 54px;
+
+            object-fit: cover;
+
+            border-radius: 10px;
+
+            background: #181818;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        .dashboard-player-song-info {
+            min-width: 0;
+        }
+
+        .dashboard-player-title {
+            color: #f5f5f5;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .dashboard-player-artist {
+            color: #777;
+
+            font-size: 11px;
+
+            margin-top: 5px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================================
+           PLAYER CONTROLS
+           ========================================= */
+
+        .dashboard-player-center {
+            min-width: 0;
+        }
+
+        .dashboard-player-controls {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: 17px;
+
+            margin-bottom: 8px;
+        }
+
+        .dashboard-player-control,
+        .dashboard-player-play {
+            border: none;
+
+            cursor: pointer;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .dashboard-player-control {
+            width: 30px;
+            height: 30px;
+
+            background: transparent;
+
+            color: #aaa;
+
+            font-size: 15px;
+        }
+
+        .dashboard-player-control:hover {
+            color: #fff;
+
+            transform: scale(1.1);
+        }
+
+        .dashboard-player-play {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            color: #000;
+
+            font-size: 13px;
+        }
+
+        .dashboard-player-play:hover {
+            transform: scale(1.08);
+        }
+
+
+        /* =========================================
+           PLAYER PROGRESS
+           ========================================= */
+
+        .dashboard-player-progress {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+        }
+
+        .dashboard-player-progress span {
+            width: 34px;
+
+            color: #666;
+
+            font-size: 9px;
+
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dashboard-player-progress span:last-child {
+            text-align: right;
+        }
+
+        #dashboardProgress {
+            flex: 1;
+
+            min-width: 0;
+
+            height: 4px;
+
+            appearance: none;
+
+            -webkit-appearance: none;
+
+            background: #303030;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        #dashboardProgress::-webkit-slider-thumb {
+            appearance: none;
+
+            -webkit-appearance: none;
+
+            width: 11px;
+            height: 11px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            cursor: pointer;
+        }
+
+        #dashboardProgress::-moz-range-thumb {
+            width: 11px;
+            height: 11px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================
+           PLAYER VOLUME
+           ========================================= */
+
+        .dashboard-player-volume {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-end;
+
+            gap: 9px;
+        }
+
+        .dashboard-player-volume span {
+            font-size: 13px;
+
+            opacity: 0.7;
+        }
+
+        #dashboardVolume {
+            width: 100px;
+
+            max-width: 100%;
+
+            height: 4px;
+
+            appearance: none;
+
+            -webkit-appearance: none;
+
+            background: #303030;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        #dashboardVolume::-webkit-slider-thumb {
+            appearance: none;
+
+            -webkit-appearance: none;
+
+            width: 10px;
+            height: 10px;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            cursor: pointer;
+        }
+
+        #dashboardVolume::-moz-range-thumb {
+            width: 10px;
+            height: 10px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: #fff;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================
+           HIDE NATIVE AUDIO
+           ========================================= */
+
+        #recentDashboardPlayer {
+            display: none;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+
+        @media (max-width: 1000px) {
+
+            .dashboard-recommended-grid {
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(0, 1fr)
+                    );
+            }
+
+            .profile-layout {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            .dashboard-player-inner {
+                grid-template-columns:
+                    1fr
+                    1.5fr;
+            }
+
+            .dashboard-player-volume {
+                display: none;
+            }
+
+        }
+
+
+        @media (max-width: 850px) {
+
+            .listener-dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .listener-dashboard-card.full-width {
+                grid-column: auto;
+            }
+
+            .dashboard-followed-artists {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            body {
+                padding-bottom: 170px;
+            }
+
+            .listener-dashboard {
+                padding:
+                    40px 6% 160px;
+            }
+
+            .dashboard-header h1 {
+                letter-spacing: -2px;
+            }
+
+            .listener-dashboard-card {
+                padding: 22px;
+            }
+
+            .dashboard-recommended-grid {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .preference-row {
+                align-items: flex-start;
+            }
+
+            .preference-row select {
+                width: 120px;
+            }
+
+            .dashboard-music-player {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+
+                border-radius: 17px;
+            }
+
+            .dashboard-player-inner {
+                grid-template-columns: 1fr;
+
+                gap: 9px;
+
+                padding: 11px 14px;
+            }
+
+            .dashboard-player-song {
+                justify-content: center;
+            }
+
+            .dashboard-player-center {
+                width: 100%;
+            }
+
+            .dashboard-player-controls {
+                margin-bottom: 7px;
+            }
+
+        }
+
+
+        @media (max-width: 420px) {
+
+            .dashboard-recommended-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-player-inner {
+                padding: 10px;
+            }
+
+            #dashboardPlayerArt {
+                width: 46px;
+                height: 46px;
+
+                min-width: 46px;
+            }
+
+            .dashboard-player-title {
+                font-size: 12px;
+            }
+
+            .dashboard-player-artist {
+                font-size: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+    <!-- =========================================
+         NAVBAR
+         ========================================= -->
+
+    <header class="navbar">
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+            MELO<span>.</span>
+        </a>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="music.html">
+                Browse
+            </a>
+
+            <a href="index.html#artistDirectory">
+                Artists
+            </a>
+
+            <a href="index.html#library">
+                Library
+            </a>
+
+        </nav>
+
+        <button
+            id="logoutButton"
+            class="login-btn"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================================
+         DASHBOARD
+         ========================================= -->
+
+    <main class="listener-dashboard">
+
+        <section class="dashboard-header">
+
+            <div class="dashboard-user">
+
+                <span class="dashboard-user-dot"></span>
+
+                <span id="dashboardUserName">
+                    Listener
+                </span>
+
+            </div>
+
+            <h1>
+                Your Dashboard.
+            </h1>
+
+            <p>
+                Manage your music, playlists, followed artists
+                and listening activity in one place.
+            </p>
+
+            <div class="dashboard-nav-actions">
+
+                <a
+                    href="index.html"
+                    class="primary-btn"
+                >
+                    ← Back to MELO
+                </a>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="listener-dashboard-grid">
+
+
+            <!-- =====================================
+                 RECENTLY PLAYED
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card"
+                id="dashboardRecentlyPlayed"
+            >
+
+                <h2>
+                    Recently Played
+                </h2>
+
+                <p class="dashboard-card-description">
+                    Continue listening to music you played recently.
+                </p>
+
+                <div
+                    id="dashboardRecentlyPlayedList"
+                    class="dashboard-placeholder"
+                >
+                    Recently played music will appear here.
+                </div>
+
+            </article>
+
+
+
+            <!-- =====================================
+                 PLAYLISTS
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card"
+                id="dashboardPlaylists"
+            >
+
+                <h2>
+                    My Playlists
+                </h2>
+
+                <p class="dashboard-card-description">
+                    Create and manage your personal music playlists.
+                </p>
+
+                <div
+                    id="dashboardPlaylistList"
+                    class="dashboard-placeholder"
+                >
+                    Your playlists will appear here.
+                </div>
+
+            </article>
+
+
+
+            <!-- =====================================
+                 FOLLOWED ARTISTS
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card"
+                id="dashboardFollowedArtists"
+            >
+
+                <h2>
+                    Followed Artists
+                </h2>
+
+                <p class="dashboard-card-description">
+                    Keep track of the artists you follow on MELO.
+                </p>
+
+                <div
+                    id="dashboardFollowedArtistList"
+                    class="dashboard-placeholder"
+                >
+                    Your followed artists will appear here.
+                </div>
+
+            </article>
+
+
+
+            <!-- =====================================
+                 RECOMMENDED MUSIC
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card"
+                id="dashboardRecommendations"
+            >
+
+                <h2>
+                    Recommended Music
+                </h2>
+
+                <p class="dashboard-card-description">
+                    Discover approved music selected for your listening experience.
+                </p>
+
+                <div
+                    id="dashboardRecommendedMusic"
+                    class="dashboard-placeholder"
+                >
+                    Loading recommendations...
+                </div>
+
+            </article>
+
+
+
+            <!-- =====================================
+                 LISTENING HISTORY
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card full-width"
+                id="dashboardHistory"
+            >
+
+                <h2>
+                    Listening History
+                </h2>
+
+                <p class="dashboard-card-description">
+                    View the music you have listened to on MELO.
+                </p>
+
+                <div
+                    id="dashboardHistoryList"
+                    class="dashboard-placeholder"
+                >
+                    Loading listening history...
+                </div>
+
+            </article>
+
+
+
+            <!-- =====================================
+                 PROFILE & PREFERENCES
+                 ===================================== -->
+
+            <article
+                class="listener-dashboard-card full-width"
+                id="dashboardProfile"
+            >
+
+                <h2>
+                    Profile & Preferences
+                </h2>
+
+                <p class="dashboard-card-description">
+                    Manage your MELO profile information and listening preferences.
+                </p>
+
+
+                <div class="profile-layout">
+
+
+                    <!-- =================================
+                         PROFILE INFORMATION
+                         ================================= -->
+
+                    <div class="profile-section">
+
+                        <h3>
+                            Profile Information
+                        </h3>
+
+
+                        <div class="profile-form">
+
+
+                            <div class="profile-field">
+
+                                <label for="profileName">
+                                    Display Name
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="profileName"
+                                    placeholder="Your name"
+                                >
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <label for="profileEmail">
+                                    Email
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="profileEmail"
+                                    readonly
+                                >
+
+                            </div>
+
+
+                            <div class="profile-field">
+
+                                <label for="profileRole">
+                                    Account Role
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="profileRole"
+                                    readonly
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- =================================
+                         PREFERENCES
+                         ================================= -->
+
+                    <div class="profile-section">
+
+                        <h3>
+                            Listening Preferences
+                        </h3>
+
+
+                        <div class="preference-row">
+
+                            <div class="preference-info">
+
+                                <div class="preference-title">
+                                    Autoplay
+                                </div>
+
+                                <div class="preference-description">
+                                    Continue with another song after the current song.
+                                </div>
+
+                            </div>
+
+
+                            <label class="toggle">
+
+                                <input
+                                    type="checkbox"
+                                    id="autoplayPreference"
+                                >
+
+                                <span class="toggle-slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="preference-row">
+
+                            <div class="preference-info">
+
+                                <div class="preference-title">
+                                    Preferred Genre
+                                </div>
+
+                                <div class="preference-description">
+                                    Used as your preferred music category.
+                                </div>
+
+                            </div>
+
+
+                            <select id="genrePreference">
+
+                                <option value="all">
+                                    All Genres
+                                </option>
+
+                                <option value="pop">
+                                    Pop
+                                </option>
+
+                                <option value="hip-hop">
+                                    Hip-Hop
+                                </option>
+
+                                <option value="bollywood">
+                                    Bollywood
+                                </option>
+
+                                <option value="rock">
+                                    Rock
+                                </option>
+
+                                <option value="electronic">
+                                    Electronic
+                                </option>
+
+                                <option value="indie">
+                                    Indie
+                                </option>
+
+                                <option value="lofi">
+                                    Lo-Fi
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="profile-actions">
+
+                            <button
+                                type="button"
+                                id="savePreferencesButton"
+                                class="profile-save-btn"
+                            >
+                                Save Preferences
+                            </button>
+
+                            <button
+                                type="button"
+                                id="resetPreferencesButton"
+                                class="profile-reset-btn"
+                            >
+                                Reset
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="profileMessage"
+                            class="profile-message"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =========================================
+         FIXED DASHBOARD MUSIC PLAYER
+         ========================================= -->
+
+    <div
+        id="dashboardMusicPlayer"
+        class="dashboard-music-player"
+    >
+
+        <div class="dashboard-player-inner">
+
+
+            <!-- SONG INFORMATION -->
+
+            <div class="dashboard-player-song">
+
+                <img
+                    id="dashboardPlayerArt"
+                    src="images/midnight.jpg"
+                    alt="Now Playing"
+                >
+
+                <div class="dashboard-player-song-info">
+
+                    <div
+                        id="dashboardPlayerTitle"
+                        class="dashboard-player-title"
+                    >
+                        Nothing Playing
+                    </div>
+
+                    <div
+                        id="dashboardPlayerArtist"
+                        class="dashboard-player-artist"
+                    >
+                        Select a song to start listening
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CONTROLS + PROGRESS -->
+
+            <div class="dashboard-player-center">
+
+                <div class="dashboard-player-controls">
+
+                    <button
+                        type="button"
+                        id="dashboardPreviousButton"
+                        class="dashboard-player-control"
+                        aria-label="Previous song"
+                    >
+                        ⏮
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="dashboardPlayButton"
+                        class="dashboard-player-play"
+                        aria-label="Play"
+                    >
+                        ▶
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="dashboardNextButton"
+                        class="dashboard-player-control"
+                        aria-label="Next song"
+                    >
+                        ⏭
+                    </button>
+
+                </div>
+
+
+                <div class="dashboard-player-progress">
+
+                    <span id="dashboardCurrentTime">
+                        0:00
+                    </span>
+
+
+                    <input
+                        type="range"
+                        id="dashboardProgress"
+                        min="0"
+                        max="100"
+                        value="0"
+                        step="0.1"
+                    >
+
+
+                    <span id="dashboardDuration">
+                        0:00
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- VOLUME -->
+
+            <div class="dashboard-player-volume">
+
+                <span>
+                    🔊
+                </span>
+
+                <input
+                    type="range"
+                    id="dashboardVolume"
+                    min="0"
+                    max="1"
+                    value="0.8"
+                    step="0.01"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- HIDDEN AUDIO ENGINE -->
+
+    <audio
+        id="recentDashboardPlayer"
+        preload="metadata"
+    ></audio>
+
+
+
+    <script src="auth.js"></script>
+
+
+    <script>
+
+        // =========================================
+        // CONFIGURATION
+        // =========================================
+
+        const API_BASE =
+            "http://localhost:4971/api";
+
+        const HISTORY_KEY =
+            "meloRecentlyPlayed";
+
+        const PLAYLISTS_KEY =
+            "meloPlaylists";
+
+        const FOLLOWED_KEY =
+            "meloFollowedArtists";
+
+        const PREFERENCES_KEY =
+            "meloListenerPreferences";
+
+
+
+        // =========================================
+        // USER
+        // =========================================
+
+        const user =
+            getLoggedInUser();
+
+
+
+        // =========================================
+        // AUTH CHECK
+        // =========================================
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+        else if (
+            String(user.role || "").toLowerCase()
+            !== "listener"
+        ) {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+        else {
+
+            initializeDashboard();
+
+        }
+
+
+
+        // =========================================
+        // INITIALIZE DASHBOARD
+        // =========================================
+
+        function initializeDashboard() {
+
+            const userName =
+                document.getElementById(
+                    "dashboardUserName"
+                );
+
+
+            if (userName) {
+
+                userName.textContent =
+                    user.name || "Listener";
+
+            }
+
+
+            loadProfile();
+
+            loadPreferences();
+
+            loadRecentlyPlayed();
+
+            loadPlaylists();
+
+            loadFollowedArtists();
+
+            loadRecommendedMusic();
+
+            loadListeningHistory();
+
+        }
+
+
+
+        // =========================================
+        // PROFILE
+        // =========================================
+
+        function loadProfile() {
+
+            const profileName =
+                document.getElementById(
+                    "profileName"
+                );
+
+            const profileEmail =
+                document.getElementById(
+                    "profileEmail"
+                );
+
+            const profileRole =
+                document.getElementById(
+                    "profileRole"
+                );
+
+
+            if (profileName) {
+
+                profileName.value =
+                    user.name || "";
+
+            }
+
+
+            if (profileEmail) {
+
+                profileEmail.value =
+                    user.email || "";
+
+            }
+
+
+            if (profileRole) {
+
+                profileRole.value =
+                    user.role || "listener";
+
+            }
+
+        }
+
+
+
+        // =========================================
+        // PREFERENCES
+        // =========================================
+
+        function getPreferences() {
+
+            const saved =
+                localStorage.getItem(
+                    PREFERENCES_KEY
+                );
+
+
+            if (!saved) {
+
+                return {
+                    autoplay: false,
+                    genre: "all"
+                };
+
+            }
+
+
+            try {
+
+                const preferences =
+                    JSON.parse(saved);
+
+
+                return {
+
+                    autoplay:
+                        preferences.autoplay === true,
+
+                    genre:
+                        preferences.genre || "all"
+
+                };
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Could not read preferences:",
+                    error
+                );
+
+
+                return {
+                    autoplay: false,
+                    genre: "all"
+                };
+
+            }
+
+        }
+
+
+
+        function loadPreferences() {
+
+            const preferences =
+                getPreferences();
+
+
+            const autoplay =
+                document.getElementById(
+                    "autoplayPreference"
+                );
+
+            const genre =
+                document.getElementById(
+                    "genrePreference"
+                );
+
+
+            if (autoplay) {
+
+                autoplay.checked =
+                    preferences.autoplay;
+
+            }
+
+
+            if (genre) {
+
+                genre.value =
+                    preferences.genre;
+
+            }
+
+        }
+
+
+
+        function savePreferences() {
+
+            const autoplay =
+                document.getElementById(
+                    "autoplayPreference"
+                );
+
+            const genre =
+                document.getElementById(
+                    "genrePreference"
+                );
+
+            const message =
+                document.getElementById(
+                    "profileMessage"
+                );
+
+
+            const preferences = {
+
+                autoplay:
+                    autoplay
+                        ? autoplay.checked
+                        : false,
+
+                genre:
+                    genre
+                        ? genre.value
+                        : "all"
+
+            };
+
+
+            localStorage.setItem(
+                PREFERENCES_KEY,
+                JSON.stringify(
+                    preferences
+                )
+            );
+
+
+            if (message) {
+
+                message.textContent =
+                    "Preferences saved successfully.";
+
+            }
+
+
+            setTimeout(
+                function () {
+
+                    if (message) {
+
+                        message.textContent =
+                            "";
+
+                    }
+
+                },
+                2500
+            );
+
+        }
+
+
+
+        function resetPreferences() {
+
+            const autoplay =
+                document.getElementById(
+                    "autoplayPreference"
+                );
+
+            const genre =
+                document.getElementById(
+                    "genrePreference"
+                );
+
+            const message =
+                document.getElementById(
+                    "profileMessage"
+                );
+
+
+            localStorage.removeItem(
+                PREFERENCES_KEY
+            );
+
+
+            if (autoplay) {
+
+                autoplay.checked =
+                    false;
+
+            }
+
+
+            if (genre) {
+
+                genre.value =
+                    "all";
+
+            }
+
+
+            if (message) {
+
+                message.textContent =
+                    "Preferences reset.";
+
+            }
+
+
+            setTimeout(
+                function () {
+
+                    if (message) {
+
+                        message.textContent =
+                            "";
+
+                    }
+
+                },
+                2500
+            );
+
+        }
+
+
+
+        // =========================================
+        // PROFILE NAME
+        // =========================================
+
+        function saveProfileName() {
+
+            const profileName =
+                document.getElementById(
+                    "profileName"
+                );
+
+
+            if (!profileName) {
+
+                return;
+
+            }
+
+
+            const newName =
+                profileName.value.trim();
+
+
+            if (!newName) {
+
+                return;
+
+            }
+
+
+            const updatedUser = {
+                ...user,
+                name: newName
+            };
+
+
+            localStorage.setItem(
+                "meloUser",
+                JSON.stringify(
+                    updatedUser
+                )
+            );
+
+
+            user.name =
+                newName;
+
+
+            const dashboardUserName =
+                document.getElementById(
+                    "dashboardUserName"
+                );
+
+
+            if (dashboardUserName) {
+
+                dashboardUserName.textContent =
+                    newName;
+
+            }
+
+        }
+
+
+
+        // =========================================
+        // GET SONG COVER
+        // =========================================
+
+        function getSongCover(song) {
+
+            if (
+                song &&
+                song.coverUrl
+            ) {
+
+                return song.coverUrl;
+
+            }
+
+
+            if (
+                song &&
+                song.coverFileName &&
+                song.id !== undefined &&
+                song.id !== null
+            ) {
+
+                return (
+                    API_BASE +
+                    "/music/" +
+                    song.id +
+                    "/cover"
+                );
+
+            }
+
+
+            return "images/midnight.jpg";
+
+        }
+
+
+
+        // =========================================
+        // DASHBOARD PLAYER
+        // =========================================
+
+        const dashboardPlayer =
+            document.getElementById(
+                "recentDashboardPlayer"
+            );
+
+        const dashboardMusicPlayer =
+            document.getElementById(
+                "dashboardMusicPlayer"
+            );
+
+        const dashboardPlayerArt =
+            document.getElementById(
+                "dashboardPlayerArt"
+            );
+
+        const dashboardPlayerTitle =
+            document.getElementById(
+                "dashboardPlayerTitle"
+            );
+
+        const dashboardPlayerArtist =
+            document.getElementById(
+                "dashboardPlayerArtist"
+            );
+
+        const dashboardPlayButton =
+            document.getElementById(
+                "dashboardPlayButton"
+            );
+
+        const dashboardPreviousButton =
+            document.getElementById(
+                "dashboardPreviousButton"
+            );
+
+        const dashboardNextButton =
+            document.getElementById(
+                "dashboardNextButton"
+            );
+
+        const dashboardProgress =
+            document.getElementById(
+                "dashboardProgress"
+            );
+
+        const dashboardCurrentTime =
+            document.getElementById(
+                "dashboardCurrentTime"
+            );
+
+        const dashboardDuration =
+            document.getElementById(
+                "dashboardDuration"
+            );
+
+        const dashboardVolume =
+            document.getElementById(
+                "dashboardVolume"
+            );
+
+
+        let dashboardCurrentSong =
+            null;
+
+        let dashboardQueue =
+            [];
+
+        let dashboardQueueIndex =
+            -1;
+
+
+
+        function formatDashboardTime(
+            seconds
+        ) {
+
+            if (
+                !Number.isFinite(seconds) ||
+                seconds < 0
+            ) {
+
+                return "0:00";
+
+            }
+
+
+            const minutes =
+                Math.floor(
+                    seconds / 60
+                );
+
+            const remainingSeconds =
+                Math.floor(
+                    seconds % 60
+                );
+
+
+            return (
+                minutes +
+                ":" +
+                String(
+                    remainingSeconds
+                ).padStart(
+                    2,
+                    "0"
+                )
+            );
+
+        }
+
+
+
+        function setDashboardPlayerVisible() {
+
+            if (!dashboardMusicPlayer) {
+
+                return;
+
+            }
+
+
+            dashboardMusicPlayer.classList.add(
+                "active"
+            );
+
+        }
+
+
+
+        function updateDashboardPlayerButton() {
+
+            if (!dashboardPlayButton) {
+
+                return;
+
+            }
+
+
+            dashboardPlayButton.textContent =
+                dashboardPlayer &&
+                !dashboardPlayer.paused
+                    ? "❚❚"
+                    : "▶";
+
+        }
+
+
+
+        function updateDashboardPlayerInfo(
+            song
+        ) {
+
+            if (!song) {
+
+                return;
+
+            }
+
+
+            if (dashboardPlayerTitle) {
+
+                dashboardPlayerTitle.textContent =
+                    song.title ||
+                    "Unknown Song";
+
+            }
+
+
+            if (dashboardPlayerArtist) {
+
+                dashboardPlayerArtist.textContent =
+                    song.artist ||
+                    "Unknown Artist";
+
+            }
+
+
+            if (dashboardPlayerArt) {
+
+                dashboardPlayerArt.src =
+                    getSongCover(song);
+
+                dashboardPlayerArt.alt =
+                    song.title ||
+                    "Music";
+
+
+                dashboardPlayerArt.onerror =
+                    function () {
+
+                        this.src =
+                            "images/midnight.jpg";
+
+                    };
+
+            }
+
+        }
+
+
+
+        function setDashboardQueue(
+            song
+        ) {
+
+            const history =
+                getRecentlyPlayed();
+
+
+            const historySongs =
+                history.filter(
+                    function (item) {
+
+                        return (
+                            item &&
+                            item.id !== undefined &&
+                            item.id !== null
+                        );
+
+                    }
+                );
+
+
+            dashboardQueue =
+                historySongs.length
+                    ? historySongs
+                    : [song];
+
+
+            const existingIndex =
+                dashboardQueue.findIndex(
+                    function (item) {
+
+                        return (
+                            String(
+                                item.id
+                            ) ===
+                            String(
+                                song.id
+                            )
+                        );
+
+                    }
+                );
+
+
+            dashboardQueueIndex =
+                existingIndex >= 0
+                    ? existingIndex
+                    : 0;
+
+        }
+
+
+
+        async function playDashboardSong(
+            song,
+            button
+        ) {
+
+            if (
+                !dashboardPlayer ||
+                !song ||
+                song.id === undefined ||
+                song.id === null
+            ) {
+
+                return;
+
+            }
+
+
+            const streamUrl =
+                API_BASE +
+                "/music/" +
+                song.id +
+                "/stream";
+
+
+            if (
+                dashboardPlayer.src === streamUrl &&
+                !dashboardPlayer.paused
+            ) {
+
+                dashboardPlayer.pause();
+
+                updateDashboardPlayerButton();
+
+                return;
+
+            }
+
+
+            dashboardCurrentSong =
+                song;
+
+
+            setDashboardQueue(
+                song
+            );
+
+
+            updateDashboardPlayerInfo(
+                song
+            );
+
+
+            setDashboardPlayerVisible();
+
+
+            if (
+                dashboardPlayer.src !==
+                streamUrl
+            ) {
+
+                dashboardPlayer.src =
+                    streamUrl;
+
+            }
+
+
+            try {
+
+                await dashboardPlayer.play();
+
+
+                updateDashboardPlayerButton();
+
+
+                document
+                    .querySelectorAll(
+                        ".recent-dashboard-play, .dashboard-playlist-play, .dashboard-recommended-play, .dashboard-history-play"
+                    )
+                    .forEach(
+                        function (item) {
+
+                            item.textContent =
+                                "▶";
+
+                        }
+                    );
+
+
+                if (button) {
+
+                    button.textContent =
+                        "❚❚";
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Could not play song:",
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        function playDashboardQueueSong(
+            index
+        ) {
+
+            if (
+                index < 0 ||
+                index >= dashboardQueue.length
+            ) {
+
+                return;
+
+            }
+
+
+            const song =
+                dashboardQueue[index];
+
+
+            dashboardQueueIndex =
+                index;
+
+
+            playDashboardSong(
+                song
+            );
+
+        }
+
+
+
+        function playDashboardPrevious() {
+
+            if (!dashboardQueue.length) {
+
+                return;
+
+            }
+
+
+            let newIndex =
+                dashboardQueueIndex - 1;
+
+
+            if (newIndex < 0) {
+
+                newIndex =
+                    dashboardQueue.length - 1;
+
+            }
+
+
+            playDashboardQueueSong(
+                newIndex
+            );
+
+        }
+
+
+
+        function playDashboardNext() {
+
+            if (!dashboardQueue.length) {
+
+                return;
+
+            }
+
+
+            let newIndex =
+                dashboardQueueIndex + 1;
+
+
+            if (
+                newIndex >=
+                dashboardQueue.length
+            ) {
+
+                newIndex =
+                    0;
+
+            }
+
+
+            playDashboardQueueSong(
+                newIndex
+            );
+
+        }
+
+
+
+        if (dashboardPlayButton) {
+
+            dashboardPlayButton.addEventListener(
+                "click",
+                function () {
+
+                    if (!dashboardPlayer) {
+
+                        return;
+
+                    }
+
+
+                    if (!dashboardPlayer.src) {
+
+                        return;
+
+                    }
+
+
+                    if (dashboardPlayer.paused) {
+
+                        dashboardPlayer
+                            .play()
+                            .catch(
+                                function (error) {
+
+                                    console.error(
+                                        error
+                                    );
+
+                                }
+                            );
+
+                    }
+
+                    else {
+
+                        dashboardPlayer.pause();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        if (dashboardPreviousButton) {
+
+            dashboardPreviousButton.addEventListener(
+                "click",
+                function () {
+
+                    playDashboardPrevious();
+
+                }
+            );
+
+        }
+
+
+
+        if (dashboardNextButton) {
+
+            dashboardNextButton.addEventListener(
+                "click",
+                function () {
+
+                    playDashboardNext();
+
+                }
+            );
+
+        }
+
+
+
+        if (dashboardProgress) {
+
+            dashboardProgress.addEventListener(
+                "input",
+                function () {
+
+                    if (
+                        !dashboardPlayer ||
+                        !Number.isFinite(
+                            dashboardPlayer.duration
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    dashboardPlayer.currentTime =
+                        (
+                            Number(
+                                dashboardProgress.value
+                            ) / 100
+                        ) *
+                        dashboardPlayer.duration;
+
+                }
+            );
+
+        }
+
+
+
+        if (dashboardVolume) {
+
+            if (dashboardPlayer) {
+
+                dashboardPlayer.volume =
+                    Number(
+                        dashboardVolume.value
+                    );
+
+            }
+
+
+            dashboardVolume.addEventListener(
+                "input",
+                function () {
+
+                    if (!dashboardPlayer) {
+
+                        return;
+
+                    }
+
+
+                    dashboardPlayer.volume =
+                        Number(
+                            dashboardVolume.value
+                        );
+
+                }
+            );
+
+        }
+
+
+
+        if (dashboardPlayer) {
+
+            dashboardPlayer.addEventListener(
+                "loadedmetadata",
+                function () {
+
+                    if (dashboardDuration) {
+
+                        dashboardDuration.textContent =
+                            formatDashboardTime(
+                                dashboardPlayer.duration
+                            );
+
+                    }
+
+                }
+            );
+
+
+            dashboardPlayer.addEventListener(
+                "timeupdate",
+                function () {
+
+                    if (
+                        dashboardCurrentTime
+                    ) {
+
+                        dashboardCurrentTime.textContent =
+                            formatDashboardTime(
+                                dashboardPlayer.currentTime
+                            );
+
+                    }
+
+
+                    if (
+                        dashboardProgress &&
+                        Number.isFinite(
+                            dashboardPlayer.duration
+                        ) &&
+                        dashboardPlayer.duration > 0
+                    ) {
+
+                        dashboardProgress.value =
+                            (
+                                dashboardPlayer.currentTime /
+                                dashboardPlayer.duration
+                            ) *
+                            100;
+
+                    }
+
+                }
+            );
+
+
+            dashboardPlayer.addEventListener(
+                "play",
+                function () {
+
+                    updateDashboardPlayerButton();
+
+                }
+            );
+
+
+            dashboardPlayer.addEventListener(
+                "pause",
+                function () {
+
+                    updateDashboardPlayerButton();
+
+
+                    document
+                        .querySelectorAll(
+                            ".recent-dashboard-play, .dashboard-playlist-play, .dashboard-recommended-play, .dashboard-history-play"
+                        )
+                        .forEach(
+                            function (button) {
+
+                                button.textContent =
+                                    "▶";
+
+                            }
+                        );
+
+                }
+            );
+
+
+            dashboardPlayer.addEventListener(
+                "ended",
+                function () {
+
+                    updateDashboardPlayerButton();
+
+
+                    document
+                        .querySelectorAll(
+                            ".recent-dashboard-play, .dashboard-playlist-play, .dashboard-recommended-play, .dashboard-history-play"
+                        )
+                        .forEach(
+                            function (button) {
+
+                                button.textContent =
+                                    "▶";
+
+                            }
+                        );
+
+
+                    const preferences =
+                        getPreferences();
+
+
+                    if (
+                        preferences.autoplay
+                    ) {
+
+                        playDashboardNext();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // RECENTLY PLAYED
+        // =========================================
+
+        function getRecentlyPlayed() {
+
+            const saved =
+                localStorage.getItem(
+                    HISTORY_KEY
+                );
+
+
+            if (!saved) {
+
+                return [];
+
+            }
+
+
+            try {
+
+                const parsed =
+                    JSON.parse(saved);
+
+
+                return Array.isArray(parsed)
+                    ? parsed
+                    : [];
+
+            }
+
+            catch (error) {
+
+                return [];
+
+            }
+
+        }
+
+
+
+        function loadRecentlyPlayed() {
+
+            const container =
+                document.getElementById(
+                    "dashboardRecentlyPlayedList"
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            const songs =
+                getRecentlyPlayed();
+
+
+            if (!songs.length) {
+
+                container.className =
+                    "recent-empty";
+
+                container.textContent =
+                    "You haven't played any music yet.";
+
+                return;
+
+            }
+
+
+            container.className =
+                "recent-dashboard-list";
+
+            container.innerHTML =
+                "";
+
+
+            songs.forEach(
+                function (song) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "recent-dashboard-item";
+
+
+                    const image =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    image.className =
+                        "recent-dashboard-art";
+
+                    image.src =
+                        getSongCover(song);
+
+                    image.alt =
+                        song.title ||
+                        "Music";
+
+
+                    image.onerror =
+                        function () {
+
+                            this.src =
+                                "images/midnight.jpg";
+
+                        };
+
+
+                    const info =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    info.className =
+                        "recent-dashboard-info";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    title.className =
+                        "recent-dashboard-title";
+
+                    title.textContent =
+                        song.title ||
+                        "Unknown Song";
+
+
+                    const artist =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    artist.className =
+                        "recent-dashboard-artist";
+
+                    artist.textContent =
+                        song.artist ||
+                        "Unknown Artist";
+
+
+                    const meta =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    meta.className =
+                        "recent-dashboard-meta";
+
+                    meta.textContent =
+                        song.album ||
+                        song.genre ||
+                        "MELO";
+
+
+                    info.appendChild(
+                        title
+                    );
+
+                    info.appendChild(
+                        artist
+                    );
+
+                    info.appendChild(
+                        meta
+                    );
+
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    button.className =
+                        "recent-dashboard-play";
+
+                    button.textContent =
+                        "▶";
+
+                    button.type =
+                        "button";
+
+
+                    button.onclick =
+                        function () {
+
+                            playDashboardSong(
+                                song,
+                                button
+                            );
+
+                        };
+
+
+                    item.appendChild(
+                        image
+                    );
+
+                    item.appendChild(
+                        info
+                    );
+
+                    item.appendChild(
+                        button
+                    );
+
+
+                    container.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // PLAYLISTS
+        // =========================================
+
+        function getPlaylists() {
+
+            const saved =
+                localStorage.getItem(
+                    PLAYLISTS_KEY
+                );
+
+
+            if (!saved) {
+
+                return [];
+
+            }
+
+
+            try {
+
+                const parsed =
+                    JSON.parse(saved);
+
+
+                if (!Array.isArray(parsed)) {
+
+                    return [];
+
+                }
+
+
+                return parsed.filter(
+                    function (playlist) {
+
+                        return (
+                            playlist &&
+                            typeof playlist === "object" &&
+                            (
+                                Array.isArray(
+                                    playlist.songs
+                                )
+                                ||
+                                Array.isArray(
+                                    playlist.music
+                                )
+                                ||
+                                Array.isArray(
+                                    playlist.tracks
+                                )
+                            )
+                        );
+
+                    }
+                );
+
+            }
+
+            catch (error) {
+
+                return [];
+
+            }
+
+        }
+
+
+
+        function getPlaylistSongs(
+            playlist
+        ) {
+
+            if (
+                Array.isArray(
+                    playlist.songs
+                )
+            ) {
+
+                return playlist.songs;
+
+            }
+
+
+            if (
+                Array.isArray(
+                    playlist.music
+                )
+            ) {
+
+                return playlist.music;
+
+            }
+
+
+            if (
+                Array.isArray(
+                    playlist.tracks
+                )
+            ) {
+
+                return playlist.tracks;
+
+            }
+
+
+            return [];
+
+        }
+
+
+
+        function loadPlaylists() {
+
+            const container =
+                document.getElementById(
+                    "dashboardPlaylistList"
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            const playlists =
+                getPlaylists();
+
+
+            if (!playlists.length) {
+
+                container.className =
+                    "dashboard-placeholder";
+
+                container.textContent =
+                    "You haven't created any playlists yet.";
+
+                return;
+
+            }
+
+
+            container.className =
+                "dashboard-playlists-list";
+
+            container.innerHTML =
+                "";
+
+
+            playlists.forEach(
+                function (
+                    playlist,
+                    index
+                ) {
+
+                    const box =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    box.className =
+                        "dashboard-playlist";
+
+
+                    const header =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    header.className =
+                        "dashboard-playlist-header";
+
+
+                    const name =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    name.className =
+                        "dashboard-playlist-name";
+
+                    name.textContent =
+                        playlist.name ||
+                        playlist.title ||
+                        "Playlist " +
+                        (index + 1);
+
+
+                    const songs =
+                        getPlaylistSongs(
+                            playlist
+                        );
+
+
+                    const count =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    count.className =
+                        "dashboard-playlist-count";
+
+                    count.textContent =
+                        songs.length +
+                        (
+                            songs.length === 1
+                                ? " song"
+                                : " songs"
+                        );
+
+
+                    header.appendChild(
+                        name
+                    );
+
+                    header.appendChild(
+                        count
+                    );
+
+                    box.appendChild(
+                        header
+                    );
+
+
+                    const songsContainer =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    songsContainer.className =
+                        "dashboard-playlist-songs";
+
+
+                    songs.forEach(
+                        function (song) {
+
+                            const item =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            item.className =
+                                "dashboard-playlist-song";
+
+
+                            const image =
+                                document.createElement(
+                                    "img"
+                                );
+
+
+                            image.className =
+                                "dashboard-playlist-song-art";
+
+                            image.src =
+                                getSongCover(song);
+
+                            image.alt =
+                                song.title ||
+                                "Music";
+
+
+                            image.onerror =
+                                function () {
+
+                                    this.src =
+                                        "images/midnight.jpg";
+
+                                };
+
+
+                            const info =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            info.className =
+                                "dashboard-playlist-song-info";
+
+
+                            const title =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            title.className =
+                                "dashboard-playlist-song-title";
+
+                            title.textContent =
+                                song.title ||
+                                "Unknown Song";
+
+
+                            const artist =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            artist.className =
+                                "dashboard-playlist-song-artist";
+
+                            artist.textContent =
+                                song.artist ||
+                                "Unknown Artist";
+
+
+                            info.appendChild(
+                                title
+                            );
+
+                            info.appendChild(
+                                artist
+                            );
+
+
+                            const button =
+                                document.createElement(
+                                    "button"
+                                );
+
+
+                            button.className =
+                                "dashboard-playlist-play";
+
+                            button.textContent =
+                                "▶";
+
+                            button.type =
+                                "button";
+
+
+                            button.onclick =
+                                function () {
+
+                                    playDashboardSong(
+                                        song,
+                                        button
+                                    );
+
+                                };
+
+
+                            item.appendChild(
+                                image
+                            );
+
+                            item.appendChild(
+                                info
+                            );
+
+                            item.appendChild(
+                                button
+                            );
+
+
+                            songsContainer.appendChild(
+                                item
+                            );
+
+                        }
+                    );
+
+
+                    if (!songs.length) {
+
+                        const empty =
+                            document.createElement(
+                                "div"
+                            );
+
+                        empty.className =
+                            "dashboard-playlist-empty";
+
+                        empty.textContent =
+                            "This playlist is empty.";
+
+                        songsContainer.appendChild(
+                            empty
+                        );
+
+                    }
+
+
+                    box.appendChild(
+                        songsContainer
+                    );
+
+                    container.appendChild(
+                        box
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // FOLLOWED ARTISTS
+        // =========================================
+
+        function getFollowedArtists() {
+
+            const saved =
+                localStorage.getItem(
+                    FOLLOWED_KEY
+                );
+
+
+            if (!saved) {
+
+                return [];
+
+            }
+
+
+            try {
+
+                const parsed =
+                    JSON.parse(saved);
+
+
+                return Array.isArray(parsed)
+                    ? parsed
+                    : [];
+
+            }
+
+            catch (error) {
+
+                return [];
+
+            }
+
+        }
+
+
+
+        function getArtistName(
+            artist
+        ) {
+
+            if (
+                typeof artist === "string"
+            ) {
+
+                return artist.trim();
+
+            }
+
+
+            if (
+                !artist ||
+                typeof artist !== "object"
+            ) {
+
+                return "";
+
+            }
+
+
+            return (
+                artist.name ||
+                artist.artist ||
+                artist.artistName ||
+                artist.title ||
+                ""
+            ).trim();
+
+        }
+
+
+
+        function loadFollowedArtists() {
+
+            const container =
+                document.getElementById(
+                    "dashboardFollowedArtistList"
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            const artists = [];
+
+            const seen =
+                new Set();
+
+
+            getFollowedArtists().forEach(
+                function (artist) {
+
+                    const name =
+                        getArtistName(
+                            artist
+                        );
+
+
+                    if (!name) {
+
+                        return;
+
+                    }
+
+
+                    const key =
+                        name.toLowerCase();
+
+
+                    if (
+                        seen.has(key)
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    seen.add(key);
+
+                    artists.push(
+                        name
+                    );
+
+                }
+            );
+
+
+            if (!artists.length) {
+
+                container.className =
+                    "followed-empty";
+
+                container.textContent =
+                    "You aren't following any artists yet.";
+
+                return;
+
+            }
+
+
+            container.className =
+                "dashboard-followed-artists";
+
+            container.innerHTML =
+                "";
+
+
+            artists.forEach(
+                function (artist) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "dashboard-followed-artist";
+
+
+                    const avatar =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    avatar.className =
+                        "dashboard-followed-artist-avatar";
+
+
+                    avatar.style.display =
+                        "flex";
+
+                    avatar.style.alignItems =
+                        "center";
+
+                    avatar.style.justifyContent =
+                        "center";
+
+                    avatar.textContent =
+                        artist
+                            .charAt(0)
+                            .toUpperCase();
+
+                    avatar.style.color =
+                        "#fff";
+
+
+                    const info =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    info.className =
+                        "dashboard-followed-artist-info";
+
+
+                    const name =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    name.className =
+                        "dashboard-followed-artist-name";
+
+                    name.textContent =
+                        artist;
+
+
+                    const label =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    label.className =
+                        "dashboard-followed-artist-label";
+
+                    label.textContent =
+                        "Followed artist";
+
+
+                    info.appendChild(
+                        name
+                    );
+
+                    info.appendChild(
+                        label
+                    );
+
+
+                    item.appendChild(
+                        avatar
+                    );
+
+                    item.appendChild(
+                        info
+                    );
+
+
+                    container.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // RECOMMENDED MUSIC
+        // =========================================
+
+        async function loadRecommendedMusic() {
+
+            const container =
+                document.getElementById(
+                    "dashboardRecommendedMusic"
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        API_BASE + "/music"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Music request failed"
+                    );
+
+                }
+
+
+                const music =
+                    await response.json();
+
+
+                const approved =
+                    music.filter(
+                        function (song) {
+
+                            return (
+                                String(
+                                    song.status || ""
+                                ).toLowerCase()
+                                === "approved"
+                            );
+
+                        }
+                    );
+
+
+                if (!approved.length) {
+
+                    container.className =
+                        "recommendation-empty";
+
+                    container.textContent =
+                        "No approved music is available yet.";
+
+                    return;
+
+                }
+
+
+                container.className =
+                    "dashboard-recommended-grid";
+
+                container.innerHTML =
+                    "";
+
+
+                approved
+                    .slice(0, 6)
+                    .forEach(
+                        function (song) {
+
+                            const card =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            card.className =
+                                "dashboard-recommended-card";
+
+
+                            const wrapper =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            wrapper.className =
+                                "dashboard-recommended-art-wrapper";
+
+
+                            const image =
+                                document.createElement(
+                                    "img"
+                                );
+
+
+                            image.className =
+                                "dashboard-recommended-art";
+
+                            image.src =
+                                getSongCover(song);
+
+                            image.alt =
+                                song.title ||
+                                "Music";
+
+
+                            image.onerror =
+                                function () {
+
+                                    this.src =
+                                        "images/midnight.jpg";
+
+                                };
+
+
+                            const button =
+                                document.createElement(
+                                    "button"
+                                );
+
+
+                            button.className =
+                                "dashboard-recommended-play";
+
+                            button.textContent =
+                                "▶";
+
+                            button.type =
+                                "button";
+
+
+                            button.onclick =
+                                function () {
+
+                                    playDashboardSong(
+                                        song,
+                                        button
+                                    );
+
+                                };
+
+
+                            wrapper.appendChild(
+                                image
+                            );
+
+                            wrapper.appendChild(
+                                button
+                            );
+
+
+                            const info =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            info.className =
+                                "dashboard-recommended-info";
+
+
+                            const title =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            title.className =
+                                "dashboard-recommended-title";
+
+                            title.textContent =
+                                song.title ||
+                                "Unknown Song";
+
+
+                            const artist =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            artist.className =
+                                "dashboard-recommended-artist";
+
+                            artist.textContent =
+                                song.artist ||
+                                "Unknown Artist";
+
+
+                            const meta =
+                                document.createElement(
+                                    "div"
+                                );
+
+
+                            meta.className =
+                                "dashboard-recommended-meta";
+
+                            meta.textContent =
+                                song.album ||
+                                song.genre ||
+                                "MELO";
+
+
+                            info.appendChild(
+                                title
+                            );
+
+                            info.appendChild(
+                                artist
+                            );
+
+                            info.appendChild(
+                                meta
+                            );
+
+
+                            card.appendChild(
+                                wrapper
+                            );
+
+                            card.appendChild(
+                                info
+                            );
+
+
+                            container.appendChild(
+                                card
+                            );
+
+                        }
+                    );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+
+                container.className =
+                    "recommendation-empty";
+
+                container.textContent =
+                    "Unable to load recommendations.";
+
+            }
+
+        }
+
+
+
+        // =========================================
+        // LISTENING HISTORY
+        // =========================================
+
+        function loadListeningHistory() {
+
+            const container =
+                document.getElementById(
+                    "dashboardHistoryList"
+                );
+
+
+            if (!container) {
+
+                return;
+
+            }
+
+
+            const history =
+                getRecentlyPlayed();
+
+
+            if (!history.length) {
+
+                container.className =
+                    "history-empty";
+
+                container.textContent =
+                    "Your listening history is empty.";
+
+                return;
+
+            }
+
+
+            container.className =
+                "dashboard-history-list";
+
+            container.innerHTML =
+                "";
+
+
+            history.forEach(
+                function (
+                    song,
+                    index
+                ) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    item.className =
+                        "dashboard-history-item";
+
+
+                    const number =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    number.className =
+                        "dashboard-history-number";
+
+                    number.textContent =
+                        index + 1;
+
+
+                    const image =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    image.className =
+                        "dashboard-history-art";
+
+                    image.src =
+                        getSongCover(song);
+
+                    image.alt =
+                        song.title ||
+                        "Music";
+
+
+                    image.onerror =
+                        function () {
+
+                            this.src =
+                                "images/midnight.jpg";
+
+                        };
+
+
+                    const info =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    info.className =
+                        "dashboard-history-info";
+
+
+                    const title =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    title.className =
+                        "dashboard-history-title";
+
+                    title.textContent =
+                        song.title ||
+                        "Unknown Song";
+
+
+                    const artist =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    artist.className =
+                        "dashboard-history-artist";
+
+                    artist.textContent =
+                        song.artist ||
+                        "Unknown Artist";
+
+
+                    const meta =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    meta.className =
+                        "dashboard-history-meta";
+
+                    meta.textContent =
+                        song.album ||
+                        song.genre ||
+                        "MELO";
+
+
+                    info.appendChild(
+                        title
+                    );
+
+                    info.appendChild(
+                        artist
+                    );
+
+                    info.appendChild(
+                        meta
+                    );
+
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    button.className =
+                        "dashboard-history-play";
+
+                    button.textContent =
+                        "▶";
+
+                    button.type =
+                        "button";
+
+
+                    button.onclick =
+                        function () {
+
+                            playDashboardSong(
+                                song,
+                                button
+                            );
+
+                        };
+
+
+                    item.appendChild(
+                        number
+                    );
+
+                    item.appendChild(
+                        image
+                    );
+
+                    item.appendChild(
+                        info
+                    );
+
+                    item.appendChild(
+                        button
+                    );
+
+
+                    container.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // BUTTON EVENTS
+        // =========================================
+
+        const savePreferencesButton =
+            document.getElementById(
+                "savePreferencesButton"
+            );
+
+
+        if (savePreferencesButton) {
+
+            savePreferencesButton.addEventListener(
+                "click",
+                function () {
+
+                    saveProfileName();
+
+                    savePreferences();
+
+                }
+            );
+
+        }
+
+
+
+        const resetPreferencesButton =
+            document.getElementById(
+                "resetPreferencesButton"
+            );
+
+
+        if (resetPreferencesButton) {
+
+            resetPreferencesButton.addEventListener(
+                "click",
+                function () {
+
+                    resetPreferences();
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // LOGOUT
+        // =========================================
+
+        const logoutButton =
+            document.getElementById(
+                "logoutButton"
+            );
+
+
+        if (logoutButton) {
+
+            logoutButton.addEventListener(
+                "click",
+                function () {
+
+                    logoutUser();
+
+                }
+            );
+
+        }
+
+
+
+        // =========================================
+        // CROSS-TAB UPDATES
+        // =========================================
+
+        window.addEventListener(
+            "storage",
+            function (event) {
+
+                if (
+                    event.key === HISTORY_KEY
+                ) {
+
+                    loadRecentlyPlayed();
+
+                    loadListeningHistory();
+
+                }
+
+
+                if (
+                    event.key === PLAYLISTS_KEY
+                ) {
+
+                    loadPlaylists();
+
+                }
+
+
+                if (
+                    event.key === FOLLOWED_KEY
+                ) {
+
+                    loadFollowedArtists();
+
+                    loadRecommendedMusic();
+
+                }
+
+
+                if (
+                    event.key === "meloUser"
+                ) {
+
+                    window.location.reload();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MELO — Create Account</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-page">
+
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <nav class="navbar">
+        <div class="logo">MELO</div>
+        <a href="index.html" class="back-home">← Back to MELO</a>
+    </nav>
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="auth-logo">♪</div>
+
+            <h1>Create your account.</h1>
+
+            <p class="auth-subtitle">
+                Join MELO and make music yours.
+            </p>
+
+            <form id="registerForm">
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Full Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Email Address"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    required
+                >
+
+                <input
+                    type="password"
+                    id="confirmPassword"
+                    placeholder="Confirm Password"
+                    required
+                >
+
+                <select id="role" required>
+                    <option value="">Select Role</option>
+                    <option value="listener">Listener</option>
+                    <option value="artist">Artist</option>
+                </select>
+
+                <button type="submit" class="auth-button">
+                    Create Account
+                </button>
+
+            </form>
+
+            <p class="switch-auth">
+                Already have an account?
+                <a href="login.html">Sign in</a>
+            </p>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>

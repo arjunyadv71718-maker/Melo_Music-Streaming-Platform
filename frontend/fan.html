@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MELO — Contact an Artist</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .fan-form { display:grid; gap:14px; margin-top:20px; }
+        .fan-form label { color:#aaa; font-size:12px; }
+        .fan-form input, .fan-form select, .fan-form textarea {
+            width:100%; box-sizing:border-box; padding:12px 13px;
+            border:1px solid rgba(255,255,255,.10); border-radius:12px;
+            background:#111; color:white; outline:none;
+        }
+        .fan-form textarea { min-height:150px; resize:vertical; }
+        .fan-message { min-height:22px; margin-top:8px; color:#aaa; }
+        .fan-note { color:#777; font-size:12px; line-height:1.5; }
+    </style>
+</head>
+<body class="auth-page">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <nav class="navbar">
+        <div class="logo">MELO</div>
+        <button class="auth-button" type="button" onclick="logoutUser()">Logout</button>
+    </nav>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <div class="auth-logo">♪</div>
+            <h1>Contact an Artist</h1>
+            <p class="auth-subtitle">Send feedback, appreciation or a message directly to an artist.</p>
+
+            <div id="userInfo"></div>
+
+            <form id="fanForm" class="fan-form">
+                <div>
+                    <label for="artistSelect">Artist</label>
+                    <select id="artistSelect" required>
+                        <option value="">Loading artists...</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="fanMessage">Message</label>
+                    <textarea id="fanMessage" maxlength="2000" placeholder="Write your message..." required></textarea>
+                </div>
+
+                <p class="fan-note">Your name and email are shared with the selected artist so they can identify the sender and reply.</p>
+
+                <button class="auth-button" type="submit">Send Message</button>
+                <p id="fanMessageStatus" class="fan-message"></p>
+            </form>
+
+            <a href="listener.html" class="primary-btn" style="display:inline-block;text-decoration:none;margin-top:8px;">Back to Dashboard</a>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+    <script>
+        const API_BASE = "http://localhost:4971/api";
+        const user = getLoggedInUser();
+
+        if (!user) {
+            window.location.href = "login.html";
+        } else if (user.role !== "listener") {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("userInfo").innerHTML = `
+                <p><strong>Name:</strong> ${escapeText(user.name)}</p>
+                <p><strong>Email:</strong> ${escapeText(user.email)}</p>
+            `;
+        }
+
+        function escapeText(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function loadArtists() {
+            const select = document.getElementById("artistSelect");
+            try {
+                const response = await fetch(`${API_BASE}/music`, { cache: "no-store" });
+                if (!response.ok) throw new Error("Unable to load artists.");
+                const music = await response.json();
+
+                const artists = [...new Set(
+                    (Array.isArray(music) ? music : [])
+                        .filter(song => String(song.status || "").toLowerCase() === "approved")
+                        .map(song => String(song.artist || "").trim())
+                        .filter(Boolean)
+                )].sort((a, b) => a.localeCompare(b));
+
+                select.innerHTML = artists.length
+                    ? `<option value="">Choose an artist</option>${artists.map(artist => `<option value="${escapeText(artist)}">${escapeText(artist)}</option>`).join("")}`
+                    : `<option value="">No approved artists available</option>`;
+            }
+            catch (error) {
+                console.error(error);
+                select.innerHTML = `<option value="">Unable to load artists</option>`;
+            }
+        }
+
+        document.getElementById("fanForm").addEventListener("submit", async event => {
+            event.preventDefault();
+
+            const status = document.getElementById("fanMessageStatus");
+            const artist = document.getElementById("artistSelect").value.trim();
+            const message = document.getElementById("fanMessage").value.trim();
+
+            if (!artist || !message) {
+                status.textContent = "Please choose an artist and write a message.";
+                return;
+            }
+
+            status.textContent = "Sending...";
+
+            try {
+                const response = await fetch(`${API_BASE}/fan-messages`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        artist,
+                        senderName: user.name,
+                        senderEmail: user.email,
+                        message
+                    })
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || "Unable to send message.");
+
+                document.getElementById("fanMessage").value = "";
+                status.textContent = "Message sent successfully.";
+            }
+            catch (error) {
+                console.error(error);
+                status.textContent = error.message || "Unable to send message.";
+            }
+        });
+
+        loadArtists();
+    </script>
+</body>
+</html>

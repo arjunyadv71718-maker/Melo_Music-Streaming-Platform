@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MELO — Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        /* =========================================
+           ADMIN DASHBOARD
+           ========================================= */
+
+        .navbar .auth-button {
+            width: auto !important;
+            margin-top: 0 !important;
+            padding: 10px 22px !important;
+            display: inline-block;
+        }
+
+
+        /* =========================================
+           USER INFORMATION
+           ========================================= */
+
+        #userInfo {
+
+            margin-top: 20px;
+            margin-bottom: 35px;
+
+            padding-bottom: 20px;
+
+            border-bottom: 1px solid #333;
+        }
+
+        #userInfo p {
+            margin: 6px 0;
+        }
+
+
+        /* =========================================
+           ADMIN SECTIONS
+           ========================================= */
+
+        .admin-section {
+
+            margin-top: 35px;
+
+            padding-top: 25px;
+
+            border-top: 1px solid #333;
+        }
+
+        .admin-section h2 {
+
+            margin: 0 0 8px 0;
+
+            line-height: 1.2;
+        }
+
+        .admin-section > p {
+
+            margin: 0 0 18px 0;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           DASHBOARD BUTTON
+           ========================================= */
+
+        .dashboard-button {
+
+            width: 100%;
+
+            margin-top: 5px;
+        }
+
+
+        /* =========================================
+           USERS LIST
+           ========================================= */
+
+        #usersList {
+
+            margin-top: 20px;
+        }
+
+        .user-card {
+
+            padding: 15px;
+
+            margin-bottom: 10px;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            border-radius: 10px;
+        }
+
+        .user-card p {
+
+            margin: 5px 0;
+        }
+
+        .user-card select {
+
+            margin-left: 8px;
+
+            padding: 8px;
+
+            background: #222;
+
+            color: white;
+
+            border: 1px solid #444;
+
+            border-radius: 6px;
+        }
+
+        .user-card .auth-button {
+
+            width: auto;
+
+            margin-top: 8px;
+
+            margin-right: 8px;
+        }
+
+
+        /* =========================================
+           MUSIC LIST
+           ========================================= */
+
+        #musicList {
+
+            margin-top: 20px;
+        }
+
+        .music-card {
+
+            padding: 18px;
+
+            margin-bottom: 12px;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            border-radius: 12px;
+        }
+
+        .music-card p {
+
+            margin: 6px 0;
+        }
+
+
+        /* =========================================
+           MUSIC STATUS
+           ========================================= */
+
+        .music-status {
+
+            display: inline-block;
+
+            margin-top: 8px;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #222;
+
+            font-size: 13px;
+        }
+
+        .music-status.pending {
+
+            background: #3a2f10;
+
+            color: #ffd86b;
+        }
+
+        .music-status.approved {
+
+            background: #12351f;
+
+            color: #6dff9b;
+        }
+
+        .music-status.rejected {
+
+            background: #3a1515;
+
+            color: #ff7b7b;
+        }
+
+
+        /* =========================================
+           MUSIC ACTION BUTTONS
+           ========================================= */
+
+        .music-actions {
+
+            margin-top: 15px;
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .music-actions .auth-button {
+
+            width: auto;
+
+            margin-top: 0;
+        }
+
+
+        /* =========================================
+           MUSIC MESSAGE
+           ========================================= */
+
+        #musicMessage {
+
+            margin-top: 15px;
+
+            min-height: 20px;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           EMPTY MESSAGE
+           ========================================= */
+
+        .empty-message {
+
+            padding: 18px;
+
+            margin-top: 15px;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            border-radius: 10px;
+
+            color: #aaa;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .setting-card {
+            padding: 14px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: #111;
+        }
+
+        .setting-card label {
+            display: block;
+            margin-bottom: 7px;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .setting-card input,
+        .setting-card select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            background: #222;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 7px;
+        }
+
+        .admin-message {
+            min-height: 20px;
+            margin-top: 12px;
+            color: #aaa;
+        }
+
+        .fan-admin-card {
+            padding: 16px;
+            margin-top: 12px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: #111;
+        }
+
+        .fan-admin-card.unread {
+            border-color: #666;
+        }
+
+        .fan-admin-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .fan-admin-muted {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .fan-admin-text {
+            margin: 12px 0;
+            color: #ddd;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+
+        .fan-admin-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .fan-admin-actions .auth-button {
+            width: auto;
+            margin-top: 0;
+        }
+
+
+
+        @media (max-width: 600px) {
+
+            .music-actions {
+
+                flex-direction: column;
+            }
+
+            .music-actions .auth-button {
+
+                width: 100%;
+            }
+
+            .user-card .auth-button {
+
+                width: 100%;
+
+                margin-right: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+    <!-- =========================================
+         BACKGROUND
+         ========================================= -->
+
+    <div class="ambient ambient-one"></div>
+
+    <div class="ambient ambient-two"></div>
+
+
+    <!-- =========================================
+         NAVBAR
+         ========================================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            MELO
+        </div>
+
+        <button
+            onclick="logoutUser()"
+            class="auth-button"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </nav>
+
+
+    <!-- =========================================
+         ADMIN DASHBOARD
+         ========================================= -->
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+
+            <!-- =================================
+                 LOGO
+                 ================================= -->
+
+            <div class="auth-logo">
+                ♪
+            </div>
+
+
+            <!-- =================================
+                 TITLE
+                 ================================= -->
+
+            <h1>
+                Admin Dashboard
+            </h1>
+
+            <p class="auth-subtitle">
+                Manage the MELO platform.
+            </p>
+
+
+            <!-- =================================
+                 USER INFORMATION
+                 ================================= -->
+
+            <div id="userInfo"></div>
+
+
+            <!-- =================================
+                 USER MANAGEMENT
+                 ================================= -->
+
+            <div class="admin-section">
+
+                <h2>
+                    User Management
+                </h2>
+
+                <p>
+                    Manage listener and artist accounts.
+                </p>
+
+                <button
+                    class="auth-button dashboard-button"
+                    onclick="loadUsers()"
+                    type="button"
+                >
+                    View Users
+                </button>
+
+                <div id="usersList"></div>
+
+            </div>
+
+
+            <!-- =================================
+                 MUSIC CONTENT MANAGEMENT
+                 ================================= -->
+
+            <div class="admin-section">
+
+                <h2>
+                    Music Content
+                </h2>
+
+                <p>
+                    Review and manage artist music submissions.
+                </p>
+
+                <button
+                    class="auth-button dashboard-button"
+                    onclick="loadMusic()"
+                    type="button"
+                >
+                    Refresh Music Submissions
+                </button>
+
+                <div id="musicList"></div>
+
+                <p id="musicMessage"></p>
+
+            </div>
+
+
+            <!-- =================================
+                 SYSTEM SETTINGS
+                 ================================= -->
+
+            <div class="admin-section">
+
+                <h2>
+                    System Settings
+                </h2>
+
+                <p>
+                    Manage system-wide MELO configuration.
+                </p>
+
+                <div id="settingsForm" class="settings-grid">
+                    Loading settings...
+                </div>
+
+                <button
+                    class="auth-button dashboard-button"
+                    type="button"
+                    onclick="saveSettings()"
+                >
+                    Save Settings
+                </button>
+
+                <p id="settingsMessage" class="admin-message"></p>
+
+            </div>
+
+
+            <!-- =================================
+                 FEEDBACK & SUPPORT
+                 ================================= -->
+
+            <div class="admin-section">
+
+                <h2>
+                    Feedback & Support
+                </h2>
+
+                <p>
+                    View listener messages sent to artists and manage support requests.
+                </p>
+
+                <button
+                    class="auth-button dashboard-button"
+                    type="button"
+                    onclick="loadFanMessages()"
+                >
+                    Refresh Messages
+                </button>
+
+                <div id="fanMessagesList"></div>
+
+                <p id="fanMessagesMessage" class="admin-message"></p>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================
+         AUTHENTICATION
+         ========================================= -->
+
+    <script src="auth.js"></script>
+
+
+    <script>
+
+        // =========================================
+        // BACKEND URL
+        // =========================================
+
+        const API_BASE =
+            "http://localhost:4971/api";
+
+
+        // =========================================
+        // GET LOGGED-IN USER
+        // =========================================
+
+        const user =
+            getLoggedInUser();
+
+
+        // =========================================
+        // AUTHENTICATION CHECK
+        // =========================================
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+        else if (user.role !== "admin") {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "userInfo"
+            ).innerHTML = `
+
+                <p>
+                    <strong>Name:</strong>
+                    ${user.name}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${user.email}
+                </p>
+
+                <p>
+                    <strong>Role:</strong>
+                    ${user.role}
+                </p>
+
+            `;
+
+        }
+
+
+        // =========================================
+        // LOAD USERS
+        // =========================================
+
+        async function loadUsers() {
+
+            const usersList =
+                document.getElementById(
+                    "usersList"
+                );
+
+
+            usersList.innerHTML =
+                "<p>Loading users...</p>";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/users`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load users."
+                    );
+
+                }
+
+
+                const users =
+                    await response.json();
+
+
+                usersList.innerHTML = "";
+
+
+                if (users.length === 0) {
+
+                    usersList.innerHTML = `
+                        <div class="empty-message">
+                            No users found.
+                        </div>
+                    `;
+
+                    return;
+
+                }
+
+
+                users.forEach(currentUser => {
+
+                    usersList.innerHTML += `
+
+                        <div class="user-card">
+
+                            <p>
+                                <strong>
+                                    ${currentUser.name}
+                                </strong>
+                            </p>
+
+                            <p>
+                                ${currentUser.email}
+                            </p>
+
+                            <p>
+
+                                <label>
+                                    Role:
+                                </label>
+
+                                <select
+                                    id="role-${currentUser.id}"
+                                >
+
+                                    <option
+                                        value="listener"
+                                        ${
+                                            currentUser.role === "listener"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Listener
+                                    </option>
+
+                                    <option
+                                        value="artist"
+                                        ${
+                                            currentUser.role === "artist"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Artist
+                                    </option>
+
+                                    <option
+                                        value="admin"
+                                        ${
+                                            currentUser.role === "admin"
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    >
+                                        Admin
+                                    </option>
+
+                                </select>
+
+                            </p>
+
+
+                            <button
+                                class="auth-button"
+                                onclick="updateUserRole(${currentUser.id})"
+                                type="button"
+                            >
+                                Update Role
+                            </button>
+
+
+                            <button
+                                class="auth-button"
+                                onclick="deleteUser(${currentUser.id})"
+                                type="button"
+                            >
+                                Delete User
+                            </button>
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Load users error:",
+                    error
+                );
+
+
+                usersList.innerHTML = `
+                    <div class="empty-message">
+                        Unable to load users.
+                        Make sure the backend is running.
+                    </div>
+                `;
+
+            }
+
+        }
+
+
+        // =========================================
+        // DELETE USER
+        // =========================================
+
+        async function deleteUser(id) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to delete this user?"
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/users/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                const result =
+                    await response.text();
+
+
+                if (response.ok) {
+
+                    alert(result);
+
+                    loadUsers();
+
+                }
+
+                else {
+
+                    alert(result);
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Delete user error:",
+                    error
+                );
+
+                alert(
+                    "Unable to delete user."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // UPDATE USER ROLE
+        // =========================================
+
+        async function updateUserRole(id) {
+
+            const roleSelect =
+                document.getElementById(
+                    `role-${id}`
+                );
+
+
+            if (!roleSelect) {
+
+                alert(
+                    "Role selector not found."
+                );
+
+                return;
+
+            }
+
+
+            const role =
+                roleSelect.value;
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/users/${id}/role?role=${encodeURIComponent(role)}`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                const result =
+                    await response.text();
+
+
+                if (response.ok) {
+
+                    alert(result);
+
+                    loadUsers();
+
+                }
+
+                else {
+
+                    alert(result);
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Update role error:",
+                    error
+                );
+
+                alert(
+                    "Unable to update user role."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // LOAD MUSIC
+        // =========================================
+
+        async function loadMusic() {
+
+            const musicList =
+                document.getElementById(
+                    "musicList"
+                );
+
+
+            const musicMessage =
+                document.getElementById(
+                    "musicMessage"
+                );
+
+
+            musicMessage.textContent =
+                "Loading music submissions...";
+
+
+            musicMessage.style.color =
+                "white";
+
+
+            musicList.innerHTML = "";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/music`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load music."
+                    );
+
+                }
+
+
+                const music =
+                    await response.json();
+
+
+                musicList.innerHTML = "";
+
+
+                if (!Array.isArray(music) || music.length === 0) {
+
+                    musicList.innerHTML = `
+                        <div class="empty-message">
+                            No music submissions found.
+                        </div>
+                    `;
+
+                    musicMessage.textContent =
+                        "";
+
+                    return;
+
+                }
+
+
+                music.forEach(song => {
+
+                    const status =
+                        song.status || "Pending";
+
+
+                    const statusClass =
+                        status.toLowerCase();
+
+
+                    let actionButtons = "";
+
+
+                    // =================================
+                    // ONLY PENDING SONGS NEED ACTION
+                    // =================================
+
+                    if (
+                        status.toLowerCase() ===
+                        "pending"
+                    ) {
+
+                        actionButtons = `
+
+                            <div class="music-actions">
+
+                                <button
+                                    class="auth-button"
+                                    onclick="updateMusicStatus(
+                                        ${song.id},
+                                        'Approved'
+                                    )"
+                                    type="button"
+                                >
+                                    Approve
+                                </button>
+
+
+                                <button
+                                    class="auth-button"
+                                    onclick="updateMusicStatus(
+                                        ${song.id},
+                                        'Rejected'
+                                    )"
+                                    type="button"
+                                >
+                                    Reject
+                                </button>
+
+                            </div>
+
+                        `;
+
+                    }
+
+
+                    musicList.innerHTML += `
+
+                        <div class="music-card">
+
+                            <p>
+
+                                <strong>
+                                    ${song.title || "Untitled"}
+                                </strong>
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    Artist:
+                                </strong>
+
+                                ${song.artist || "Unknown"}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    Album:
+                                </strong>
+
+                                ${song.album || "Unknown"}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    Genre:
+                                </strong>
+
+                                ${song.genre || "Unknown"}
+
+                            </p>
+
+
+                            <p>
+
+                                <strong>
+                                    Music File:
+                                </strong>
+
+                                ${
+                                    song.fileName
+                                        ? song.fileName
+                                        : "No file uploaded"
+                                }
+
+                            </p>
+
+
+                            <span
+                                class="music-status ${statusClass}"
+                            >
+
+                                Status:
+                                ${status}
+
+                            </span>
+
+
+                            ${actionButtons}
+
+                        </div>
+
+                    `;
+
+                });
+
+
+                musicMessage.textContent =
+                    `${music.length} music submission(s) loaded.`;
+
+
+                musicMessage.style.color =
+                    "#aaa";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Load music error:",
+                    error
+                );
+
+
+                musicList.innerHTML = "";
+
+
+                musicMessage.textContent =
+                    "Unable to load music submissions. Make sure the backend is running.";
+
+
+                musicMessage.style.color =
+                    "#ff6b6b";
+
+            }
+
+        }
+
+
+        // =========================================
+        // UPDATE MUSIC STATUS
+        // =========================================
+
+        async function updateMusicStatus(
+            id,
+            status
+        ) {
+
+            const action =
+                status.toLowerCase();
+
+
+            const confirmed =
+                confirm(
+                    `Are you sure you want to ${action} this music?`
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE}/music/${id}/status?status=${encodeURIComponent(status)}`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                const result =
+                    await response.text();
+
+
+                if (response.ok) {
+
+                    alert(
+                        result
+                    );
+
+
+                    // Refresh music list
+                    await loadMusic();
+
+                }
+
+                else {
+
+                    alert(
+                        result ||
+                        "Unable to update music status."
+                    );
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Update music status error:",
+                    error
+                );
+
+
+                alert(
+                    "Unable to update music status. Make sure the backend is running."
+                );
+
+            }
+
+        }
+
+
+        // =========================================
+        // COMING SOON
+        // =========================================
+
+        // =========================================
+        // SYSTEM SETTINGS
+        // =========================================
+
+        const SETTING_DEFINITIONS = [
+            { key: "siteName", label: "Site Name", type: "text" },
+            { key: "allowRegistrations", label: "Allow Registrations", type: "boolean" },
+            { key: "maintenanceMode", label: "Maintenance Mode", type: "boolean" },
+            { key: "maxUploadSizeMB", label: "Max Upload Size (MB)", type: "number" },
+            { key: "supportEmail", label: "Support Email", type: "email" }
+        ];
+
+        function escapeAdminText(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        async function loadSettings() {
+            const form = document.getElementById("settingsForm");
+            const message = document.getElementById("settingsMessage");
+            if (!form) return;
+
+            form.innerHTML = "Loading settings...";
+
+            try {
+                const response = await fetch(`${API_BASE}/settings`, { cache: "no-store" });
+                if (!response.ok) throw new Error("Unable to load settings.");
+                const settings = await response.json();
+
+                form.innerHTML = SETTING_DEFINITIONS.map(definition => {
+                    const value = settings[definition.key] ?? "";
+                    if (definition.type === "boolean") {
+                        return `
+                            <div class="setting-card">
+                                <label for="setting-${definition.key}">${escapeAdminText(definition.label)}</label>
+                                <select id="setting-${definition.key}">
+                                    <option value="true" ${String(value) === "true" ? "selected" : ""}>Enabled</option>
+                                    <option value="false" ${String(value) !== "true" ? "selected" : ""}>Disabled</option>
+                                </select>
+                            </div>
+                        `;
+                    }
+                    return `
+                        <div class="setting-card">
+                            <label for="setting-${definition.key}">${escapeAdminText(definition.label)}</label>
+                            <input id="setting-${definition.key}" type="${definition.type}" value="${escapeAdminText(value)}">
+                        </div>
+                    `;
+                }).join("");
+                message.textContent = "";
+            }
+            catch (error) {
+                console.error("Settings error:", error);
+                form.innerHTML = "Unable to load system settings.";
+                message.textContent = "Make sure the MELO backend is running.";
+            }
+        }
+
+        async function saveSettings() {
+            const message = document.getElementById("settingsMessage");
+            const updates = {};
+
+            SETTING_DEFINITIONS.forEach(definition => {
+                const input = document.getElementById(`setting-${definition.key}`);
+                if (input) updates[definition.key] = input.value;
+            });
+
+            try {
+                const response = await fetch(`${API_BASE}/settings`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updates)
+                });
+
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.message || "Unable to save settings.");
+
+                message.textContent = "Settings saved successfully.";
+                await loadSettings();
+                document.getElementById("settingsMessage").textContent = "Settings saved successfully.";
+            }
+            catch (error) {
+                console.error("Save settings error:", error);
+                message.textContent = error.message || "Unable to save settings.";
+            }
+        }
+
+        // =========================================
+        // FAN / SUPPORT MESSAGES
+        // =========================================
+
+        async function loadFanMessages() {
+            const list = document.getElementById("fanMessagesList");
+            const message = document.getElementById("fanMessagesMessage");
+            if (!list) return;
+
+            list.innerHTML = "Loading messages...";
+            message.textContent = "";
+
+            try {
+                const response = await fetch(`${API_BASE}/fan-messages`, { cache: "no-store" });
+                if (!response.ok) throw new Error("Unable to load messages.");
+                const messages = await response.json();
+
+                if (!Array.isArray(messages) || messages.length === 0) {
+                    list.innerHTML = `<div class="empty-message">No messages found.</div>`;
+                    return;
+                }
+
+                list.innerHTML = messages.map(item => `
+                    <div class="fan-admin-card ${item.read ? "" : "unread"}">
+                        <div class="fan-admin-meta">
+                            <div>
+                                <strong>${escapeAdminText(item.senderName)}</strong>
+                                <div class="fan-admin-muted">${escapeAdminText(item.senderEmail)}</div>
+                            </div>
+                            <div class="fan-admin-muted">Artist: ${escapeAdminText(item.artist)}</div>
+                            <div class="fan-admin-muted">${escapeAdminText(item.createdAt || "")}</div>
+                        </div>
+                        <div class="fan-admin-text">${escapeAdminText(item.message)}</div>
+                        <div class="fan-admin-actions">
+                            ${item.read ? "" : `<button class="auth-button" type="button" onclick="markAdminFanMessageRead(${item.id})">Mark as Read</button>`}
+                            <button class="auth-button" type="button" onclick="deleteFanMessage(${item.id})">Delete</button>
+                        </div>
+                    </div>
+                `).join("");
+
+                const unread = messages.filter(item => !item.read).length;
+                message.textContent = `${messages.length} total • ${unread} unread`;
+            }
+            catch (error) {
+                console.error("Fan message error:", error);
+                list.innerHTML = `<div class="empty-message">Unable to load messages.</div>`;
+                message.textContent = "Make sure the MELO backend is running.";
+            }
+        }
+
+        async function markAdminFanMessageRead(id) {
+            try {
+                const response = await fetch(`${API_BASE}/fan-messages/${encodeURIComponent(id)}/read`, { method: "PUT" });
+                if (!response.ok) throw new Error("Unable to update message.");
+                await loadFanMessages();
+            }
+            catch (error) {
+                alert("Unable to update this message.");
+            }
+        }
+
+        async function deleteFanMessage(id) {
+            if (!confirm("Delete this message?")) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/fan-messages/${encodeURIComponent(id)}`, { method: "DELETE" });
+                if (!response.ok) throw new Error("Unable to delete message.");
+                await loadFanMessages();
+            }
+            catch (error) {
+                alert("Unable to delete this message.");
+            }
+        }
+
+        function showComingSoon(section) {
+
+            alert(
+                `${section} will be added in the next stage of MELO.`
+            );
+
+        }
+
+
+        // =========================================
+        // LOAD MUSIC WHEN ADMIN PAGE OPENS
+        // =========================================
+
+        if (
+            user &&
+            user.role === "admin"
+        ) {
+
+            loadMusic();
+
+        }
+
+    
+
+        // Load settings and support data automatically.
+        loadSettings();
+        loadFanMessages();
+</script>
+
+
+</body>
+
+</html>

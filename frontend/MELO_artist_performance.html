@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MELO — Artist Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+    <style>
+
+        /* =========================================
+           ARTIST DASHBOARD
+           ========================================= */
+
+        .navbar .auth-button {
+            width: auto !important;
+            margin-top: 0 !important;
+            padding: 10px 22px !important;
+        }
+
+
+        #userInfo {
+            margin-top: 20px;
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        #userInfo p {
+            margin: 6px 0;
+        }
+
+        /* =========================================
+           ARTIST PROFILE
+           ========================================= */
+
+        .artist-profile {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 25px;
+            padding: 18px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 16px;
+        }
+
+        .artist-profile-picture {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #222;
+            border: 1px solid #444;
+            flex-shrink: 0;
+        }
+
+        .artist-profile-placeholder {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            border: 1px solid #444;
+            font-size: 38px;
+            flex-shrink: 0;
+        }
+
+        .profile-upload-form {
+            flex: 1;
+        }
+
+        .profile-upload-form input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 8px 0 10px;
+            background: #111;
+            color: white;
+            border: 1px solid #333;
+            border-radius: 10px;
+        }
+
+        .profile-upload-form button {
+            width: 100%;
+        }
+
+        .profile-message {
+            margin: 8px 0 0;
+            font-size: 13px;
+            min-height: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .artist-profile {
+                align-items: flex-start;
+            }
+        }
+
+
+        .artist-section {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid #333;
+        }
+
+
+        .artist-section h2 {
+            margin-bottom: 8px;
+        }
+
+
+        .section-description {
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+
+        /* =========================================
+           FORM
+           ========================================= */
+
+        #musicForm {
+            width: 100%;
+        }
+
+
+        #musicForm input,
+        #musicForm select {
+
+            width: 100%;
+            box-sizing: border-box;
+
+            margin-bottom: 14px;
+        }
+
+
+        /* =========================================
+           FILE INPUT
+           ========================================= */
+
+        #musicFile,
+        #coverFile {
+
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 12px;
+
+            margin-bottom: 14px;
+
+            background: #111;
+
+            color: white;
+
+            border: 1px solid #333;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+
+        #musicFile::file-selector-button,
+        #coverFile::file-selector-button {
+
+            background: white;
+
+            color: black;
+
+            border: none;
+
+            border-radius: 7px;
+
+            padding: 9px 14px;
+
+            margin-right: 12px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+        }
+
+
+        /* =========================================
+           UPLOAD BUTTON
+           ========================================= */
+
+        #musicForm .auth-button {
+
+            width: 100%;
+
+            margin-top: 5px;
+        }
+
+
+        /* =========================================
+           MESSAGE
+           ========================================= */
+
+        #musicMessage {
+
+            margin-top: 15px !important;
+
+            font-size: 14px;
+
+            min-height: 20px;
+        }
+
+
+        /* =========================================
+           SONG LIST
+           ========================================= */
+
+        .artist-song {
+
+            padding: 18px;
+
+            margin-bottom: 14px;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            border-radius: 14px;
+        }
+
+
+        .artist-song-title {
+
+            font-size: 17px;
+
+            font-weight: 600;
+
+            margin-bottom: 5px;
+        }
+
+
+        .artist-song-details {
+
+            color: #888;
+
+            font-size: 13px;
+
+            margin-bottom: 14px;
+        }
+
+
+        .song-status {
+
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            background: #222;
+
+            font-size: 12px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .cover-form {
+
+            margin-top: 10px;
+        }
+
+
+        .cover-form input {
+
+            width: 100%;
+
+            margin-bottom: 10px;
+        }
+
+
+        .cover-form button {
+
+            width: 100%;
+        }
+
+
+        .artist-message {
+
+            margin-top: 10px;
+
+            font-size: 13px;
+
+            min-height: 18px;
+        }
+
+        /* =========================================
+           PERFORMANCE ANALYTICS
+           ========================================= */
+
+        .performance-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin-top:22px; }
+        .performance-stat-card, .performance-panel { background:#111; border:1px solid #333; border-radius:14px; }
+        .performance-stat-card { padding:18px; }
+        .performance-stat-card span { display:block; color:#888; font-size:12px; margin-bottom:9px; }
+        .performance-stat-card strong { display:block; font-size:26px; }
+        .performance-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:14px; }
+        .performance-panel { padding:18px; margin-top:14px; }
+        .performance-grid .performance-panel { margin-top:0; }
+        .performance-panel h3 { margin:0 0 16px; font-size:16px; }
+        .top-song-card { min-height:70px; display:flex; flex-direction:column; justify-content:center; gap:5px; }
+        .top-song-title { font-size:18px; font-weight:700; }
+        .top-song-meta { color:#888; font-size:13px; }
+        .top-song-streams { margin-top:5px; font-size:13px; }
+        .status-summary { display:grid; gap:10px; }
+        .status-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; background:#171717; border-radius:10px; font-size:13px; }
+        .status-row span:last-child { font-weight:700; }
+        .performance-table-wrap { width:100%; overflow-x:auto; }
+        .performance-table { width:100%; border-collapse:collapse; min-width:600px; }
+        .performance-table th,.performance-table td { padding:12px 10px; text-align:left; border-bottom:1px solid #292929; font-size:13px; }
+        .performance-table th { color:#888; font-weight:600; }
+        .performance-table td:nth-child(4),.performance-table td:nth-child(5) { font-weight:700; }
+        .performance-status { display:inline-block; padding:4px 9px; border-radius:999px; background:#222; font-size:11px; }
+        @media (max-width:700px) { .performance-stats,.performance-grid { grid-template-columns:1fr; } }
+
+
+
+    </style>
+
+</head>
+
+
+<body class="auth-page">
+
+
+    <!-- =========================================
+         BACKGROUND
+         ========================================= -->
+
+    <div class="ambient ambient-one"></div>
+
+    <div class="ambient ambient-two"></div>
+
+
+    <!-- =========================================
+         NAVBAR
+         ========================================= -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            MELO
+        </div>
+
+
+        <button
+            onclick="logoutUser()"
+            class="auth-button"
+            type="button"
+        >
+            Logout
+        </button>
+
+    </nav>
+
+
+    <!-- =========================================
+         DASHBOARD
+         ========================================= -->
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+
+            <div class="auth-logo">
+                ♪
+            </div>
+
+
+            <h1>
+                Artist Dashboard
+            </h1>
+
+
+            <p class="auth-subtitle">
+                Welcome back, artist.
+            </p>
+
+
+            <!-- =================================
+                 USER INFORMATION
+                 ================================= -->
+
+            <div id="userInfo"></div>
+
+
+            <!-- =================================
+                 ARTIST PROFILE
+                 ================================= -->
+
+            <div class="artist-section" style="margin-top:0; border-top:none; padding-top:0;">
+
+                <h2>Artist Profile</h2>
+
+                <p class="section-description">
+                    Add a profile picture that represents you as an artist.
+                </p>
+
+                <div class="artist-profile">
+
+                    <div id="artistProfilePreview"></div>
+
+                    <div class="profile-upload-form">
+
+                        <strong>Profile Picture</strong>
+
+                        <input
+                            type="file"
+                            id="artistProfileFile"
+                            accept="image/*"
+                        >
+
+                        <button
+                            type="button"
+                            class="auth-button"
+                            onclick="saveArtistProfilePicture()"
+                        >
+                            Save Profile Picture
+                        </button>
+
+                        <p
+                            id="profileMessage"
+                            class="profile-message"
+                        ></p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================
+                 UPLOAD MUSIC
+                 ================================= -->
+
+            <div class="artist-section">
+
+                <h2>
+                    Upload Music
+                </h2>
+
+                <p class="section-description">
+                    Submit your music for admin approval.
+                </p>
+
+
+                <form id="musicForm">
+
+
+                    <input
+                        type="text"
+                        id="title"
+                        placeholder="Song Title"
+                        required
+                    >
+
+
+                    <input
+                        type="text"
+                        id="artist"
+                        placeholder="Artist Name"
+                        readonly
+                        required
+                    >
+
+
+                    <input
+                        type="text"
+                        id="album"
+                        placeholder="Album Name"
+                        required
+                    >
+
+
+                    <input
+                        type="file"
+                        id="musicFile"
+                        accept="audio/*"
+                        required
+                    >
+
+
+                    <!-- COVER IMAGE -->
+
+                    <input
+                        type="file"
+                        id="newCoverFile"
+                        accept="image/*"
+                    >
+
+
+                    <select
+                        id="genre"
+                        required
+                    >
+
+                        <option value="">
+                            Select Genre
+                        </option>
+
+                        <option value="Pop">
+                            Pop
+                        </option>
+
+                        <option value="Rock">
+                            Rock
+                        </option>
+
+                        <option value="Hip Hop">
+                            Hip Hop
+                        </option>
+
+                        <option value="Electronic">
+                            Electronic
+                        </option>
+
+                        <option value="Classical">
+                            Classical
+                        </option>
+
+                        <option value="Jazz">
+                            Jazz
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        type="submit"
+                        class="auth-button"
+                    >
+                        Submit Music
+                    </button>
+
+                </form>
+
+
+                <p id="musicMessage"></p>
+
+            </div>
+
+
+            <!-- =================================
+                 EXISTING MUSIC
+                 ================================= -->
+
+            <div class="artist-section">
+
+                <h2>
+                    Your Uploaded Music
+                </h2>
+
+
+                <p class="section-description">
+                    Add or update cover images for your uploaded songs.
+                </p>
+
+
+                <div id="artistMusicList">
+
+                    Loading your music...
+
+                </div>
+
+            </div>
+
+            <!-- =================================
+                 PERFORMANCE ANALYTICS
+                 ================================= -->
+
+            <div class="artist-section" id="performanceSection">
+
+                <h2>
+                    Performance Analytics
+                </h2>
+
+                <p class="section-description">
+                    Track streams, likes, upload status and your top-performing music.
+                </p>
+
+                <p id="performanceMessage" class="artist-message"></p>
+
+                <div class="performance-stats">
+                    <div class="performance-stat-card"><span>Total Streams</span><strong id="totalStreams">0</strong></div>
+                    <div class="performance-stat-card"><span>Total Likes</span><strong id="totalLikes">0</strong></div>
+                    <div class="performance-stat-card"><span>Total Songs</span><strong id="totalSongs">0</strong></div>
+                    <div class="performance-stat-card"><span>Approved Songs</span><strong id="approvedSongs">0</strong></div>
+                </div>
+
+                <div class="performance-grid">
+                    <div class="performance-panel">
+                        <h3>Top Performing Song</h3>
+                        <div id="topSongCard" class="top-song-card">Loading performance...</div>
+                    </div>
+                    <div class="performance-panel">
+                        <h3>Upload Status</h3>
+                        <div id="statusSummary" class="status-summary">Loading status...</div>
+                    </div>
+                </div>
+
+                <div class="performance-panel">
+                    <h3>Song Performance Report</h3>
+                    <div class="performance-table-wrap">
+                        <table class="performance-table">
+                            <thead><tr><th>Song</th><th>Album</th><th>Status</th><th>Streams</th><th>Likes</th></tr></thead>
+                            <tbody id="performanceTableBody"><tr><td colspan="5">Loading performance...</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+
+<!-- =================================
+                 FANS
+                 ================================= -->
+
+            <div class="artist-section">
+
+                <h2>
+                    Fans
+                </h2>
+
+                <p>
+                    View messages and feedback from your fans.
+                </p>
+
+
+                <button
+                    class="auth-button"
+                    type="button"
+                >
+                    View Fan Messages
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================
+         AUTH
+         ========================================= -->
+
+    <script src="auth.js"></script>
+
+
+    <script>
+
+        // =========================================
+        // GET USER
+        // =========================================
+
+        const user =
+            getLoggedInUser();
+
+
+        // =========================================
+        // AUTH CHECK
+        // =========================================
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+        }
+
+        else if (user.role !== "artist") {
+
+            window.location.href =
+                "index.html";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "userInfo"
+            ).innerHTML = `
+
+                <p>
+                    <strong>Name:</strong>
+                    ${user.name}
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    ${user.email}
+                </p>
+
+                <p>
+                    <strong>Role:</strong>
+                    ${user.role}
+                </p>
+
+            `;
+
+
+            document.getElementById(
+                "artist"
+            ).value = user.name;
+
+
+            loadArtistProfilePicture();
+
+
+            loadArtistMusic();
+            loadPerformance();
+        }
+
+
+
+        // =========================================
+        // ARTIST PROFILE PICTURE
+        // =========================================
+
+        const ARTIST_PROFILE_KEY_PREFIX = "meloArtistProfilePicture:";
+
+
+        function getArtistProfileKey() {
+            return ARTIST_PROFILE_KEY_PREFIX + String(user.email || user.name).toLowerCase();
+        }
+
+
+        function renderArtistProfilePicture(imageData) {
+            const preview = document.getElementById("artistProfilePreview");
+
+            if (!preview) {
+                return;
+            }
+
+            if (imageData) {
+                preview.innerHTML = `
+                    <img
+                        class="artist-profile-picture"
+                        src="${imageData}"
+                        alt="${user.name} profile picture"
+                    >
+                `;
+            } else {
+                preview.innerHTML = `
+                    <div class="artist-profile-placeholder" aria-label="Artist profile placeholder">♪</div>
+                `;
+            }
+        }
+
+
+        function loadArtistProfilePicture() {
+            const savedPicture = localStorage.getItem(getArtistProfileKey());
+            renderArtistProfilePicture(savedPicture);
+        }
+
+
+        function saveArtistProfilePicture() {
+            const fileInput = document.getElementById("artistProfileFile");
+            const message = document.getElementById("profileMessage");
+            const file = fileInput?.files?.[0];
+
+            if (!file) {
+                message.textContent = "Please select a profile picture.";
+                message.style.color = "#ff6b6b";
+                return;
+            }
+
+            if (!file.type.startsWith("image/")) {
+                message.textContent = "Please select a valid image.";
+                message.style.color = "#ff6b6b";
+                return;
+            }
+
+            if (file.size > 5 * 1024 * 1024) {
+                message.textContent = "Profile picture must be 5 MB or smaller.";
+                message.style.color = "#ff6b6b";
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function () {
+                const imageData = reader.result;
+
+                try {
+                    localStorage.setItem(getArtistProfileKey(), imageData);
+                    renderArtistProfilePicture(imageData);
+                    fileInput.value = "";
+                    message.textContent = "Profile picture saved successfully!";
+                    message.style.color = "#7CFF9B";
+                } catch (error) {
+                    console.error("Profile picture save error:", error);
+                    message.textContent = "Unable to save the profile picture in this browser.";
+                    message.style.color = "#ff6b6b";
+                }
+            };
+
+            reader.onerror = function () {
+                message.textContent = "Unable to read the selected image.";
+                message.style.color = "#ff6b6b";
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+
+        // =========================================
+        // UPLOAD NEW MUSIC
+        // =========================================
+
+        const musicForm =
+            document.getElementById(
+                "musicForm"
+            );
+
+
+        musicForm.addEventListener(
+            "submit",
+            async function(event) {
+
+                event.preventDefault();
+
+
+                const title =
+                    document.getElementById(
+                        "title"
+                    ).value.trim();
+
+
+                const artist =
+                    document.getElementById(
+                        "artist"
+                    ).value.trim();
+
+
+                const album =
+                    document.getElementById(
+                        "album"
+                    ).value.trim();
+
+
+                const genre =
+                    document.getElementById(
+                        "genre"
+                    ).value;
+
+
+                const musicFile =
+                    document.getElementById(
+                        "musicFile"
+                    ).files[0];
+
+
+                const newCoverFile =
+                    document.getElementById(
+                        "newCoverFile"
+                    ).files[0];
+
+
+                const musicMessage =
+                    document.getElementById(
+                        "musicMessage"
+                    );
+
+
+                if (!musicFile) {
+
+                    musicMessage.textContent =
+                        "Please select a music file.";
+
+                    musicMessage.style.color =
+                        "#ff6b6b";
+
+                    return;
+                }
+
+
+                if (
+                    !musicFile.type.startsWith(
+                        "audio/"
+                    )
+                ) {
+
+                    musicMessage.textContent =
+                        "Please select a valid audio file.";
+
+                    musicMessage.style.color =
+                        "#ff6b6b";
+
+                    return;
+                }
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "title",
+                    title
+                );
+
+
+                formData.append(
+                    "artist",
+                    artist
+                );
+
+
+                formData.append(
+                    "album",
+                    album
+                );
+
+
+                formData.append(
+                    "genre",
+                    genre
+                );
+
+
+                formData.append(
+                    "file",
+                    musicFile
+                );
+
+
+                // Send the optional cover together with the music upload.
+                if (newCoverFile) {
+
+                    if (!newCoverFile.type.startsWith("image/")) {
+
+                        musicMessage.textContent =
+                            "Please select a valid cover image.";
+
+                        musicMessage.style.color =
+                            "#ff6b6b";
+
+                        return;
+                    }
+
+                    formData.append(
+                        "cover",
+                        newCoverFile
+                    );
+                }
+
+
+                musicMessage.textContent =
+                    "Uploading music...";
+
+
+                musicMessage.style.color =
+                    "white";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "http://localhost:4971/api/music",
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+
+                    const responseText =
+                        await response.text();
+
+
+                    if (response.ok) {
+
+                        musicMessage.textContent =
+                            "Music uploaded successfully!";
+
+                        musicMessage.style.color =
+                            "#7CFF9B";
+
+
+                        musicForm.reset();
+
+
+                        document.getElementById(
+                            "artist"
+                        ).value =
+                            user.name;
+
+
+                        loadArtistMusic();
+                        loadPerformance();
+
+                    }
+
+                    else {
+
+                        musicMessage.textContent =
+                            responseText;
+
+                        musicMessage.style.color =
+                            "#ff6b6b";
+                    }
+
+                }
+
+                catch (error) {
+
+                    console.error(error);
+
+                    musicMessage.textContent =
+                        "Unable to connect to MELO server.";
+
+                    musicMessage.style.color =
+                        "#ff6b6b";
+                }
+
+            }
+        );
+
+
+
+        // =========================================
+        // LOAD ARTIST MUSIC
+        // =========================================
+
+        async function loadArtistMusic() {
+
+            const list =
+                document.getElementById(
+                    "artistMusicList"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "http://localhost:4971/api/music"
+                    );
+
+
+                const music =
+                    await response.json();
+
+
+                const artistName = String(user.name || "").trim().toLowerCase();
+
+                const myMusic =
+                    Array.isArray(music)
+                        ? music.filter(song => {
+                            const songArtist = String(song.artist || "").trim().toLowerCase();
+                            return songArtist === artistName;
+                        })
+                        : [];
+
+
+                if (myMusic.length === 0) {
+
+                    list.innerHTML =
+                        "<p>No uploaded music found.</p>";
+
+                    return;
+                }
+
+
+                list.innerHTML = "";
+
+
+                myMusic.forEach(song => {
+
+                    list.innerHTML += `
+
+                        <div class="artist-song">
+
+                            <div class="artist-song-title">
+                                ${song.title}
+                            </div>
+
+                            <div class="artist-song-details">
+
+                                ${song.album}
+                                •
+                                ${song.genre}
+
+                            </div>
+
+
+                            <div class="song-status">
+
+                                Status:
+                                ${song.status}
+
+                            </div>
+
+
+                            <div>
+
+                                <strong>
+                                    Cover Image
+                                </strong>
+
+                            </div>
+
+                            <div style="margin-top:10px;">
+
+                                ${song.coverFileName
+                                    ? `
+                                        <img
+                                            src="http://localhost:4971/api/music/${song.id}/cover"
+                                            alt="${song.title} cover"
+                                            style="width:90px;height:90px;object-fit:cover;border-radius:12px;border:1px solid #333;"
+                                            onerror="this.style.display='none';"
+                                        >
+                                      `
+                                    : `<span style="color:#777;">No cover uploaded yet.</span>`
+                                }
+
+                            </div>
+
+
+                            <form
+                                class="cover-form"
+                                onsubmit="
+                                    updateCover(
+                                        event,
+                                        ${song.id}
+                                    )
+                                "
+                            >
+
+                                <input
+                                    type="file"
+                                    id="cover-${song.id}"
+                                    accept="image/*"
+                                    required
+                                >
+
+
+                                <button
+                                    type="submit"
+                                    class="auth-button"
+                                >
+                                    Update Cover
+                                </button>
+
+                            </form>
+
+
+                            <p
+                                id="cover-message-${song.id}"
+                                class="artist-message"
+                            ></p>
+
+                        </div>
+
+                    `;
+
+                });
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                list.innerHTML =
+                    "<p>Unable to load your music. Make sure the MELO backend is running.</p>";
+            }
+        }
+
+
+
+\n\n        // =========================================\n        // PERFORMANCE ANALYTICS\n        // =========================================\n\n        function formatPerformanceNumber(value) {\n            return Number(value || 0).toLocaleString();\n        }\n\n        function escapePerformanceText(value) {\n            return String(value ?? "")\n                .replace(/&/g, "&amp;")\n                .replace(/</g, "&lt;")\n                .replace(/>/g, "&gt;")\n                .replace(/"/g, "&quot;")\n                .replace(/'/g, "&#039;");\n        }\n\n        async function loadPerformance() {\n            const message = document.getElementById("performanceMessage");\n            try {\n                message.textContent = "Loading performance data...";\n                message.style.color = "#888";\n                const response = await fetch("http://localhost:4971/api/music", { cache: "no-store" });\n                if (!response.ok) throw new Error("Performance API failed");\n                const music = await response.json();\n                const myMusic = Array.isArray(music) ? music.filter(song => song.artist === user.name) : [];\n                const totalStreams = myMusic.reduce((sum,song) => sum + Number(song.streams || 0),0);\n                const totalLikes = myMusic.reduce((sum,song) => sum + Number(song.likes || 0),0);\n                const approved = myMusic.filter(song => String(song.status || "").toLowerCase() === "approved").length;\n                const pending = myMusic.filter(song => String(song.status || "").toLowerCase() === "pending").length;\n                const rejected = myMusic.filter(song => String(song.status || "").toLowerCase() === "rejected").length;\n                document.getElementById("totalStreams").textContent = formatPerformanceNumber(totalStreams);\n                document.getElementById("totalLikes").textContent = formatPerformanceNumber(totalLikes);\n                document.getElementById("totalSongs").textContent = formatPerformanceNumber(myMusic.length);\n                document.getElementById("approvedSongs").textContent = formatPerformanceNumber(approved);\n                const sortedMusic = [...myMusic].sort((a,b) => Number(b.streams || 0) - Number(a.streams || 0));\n                const topSong = sortedMusic[0];\n                document.getElementById("topSongCard").innerHTML = topSong ? `\n                    <div class="top-song-title">${escapePerformanceText(topSong.title)}</div>\n                    <div class="top-song-meta">${escapePerformanceText(topSong.album || "Single")} • ${escapePerformanceText(topSong.status || "Unknown")}</div>\n                    <div class="top-song-streams">${formatPerformanceNumber(topSong.streams)} streams • ${formatPerformanceNumber(topSong.likes)} likes</div>\n                ` : "No music uploaded yet.";\n                document.getElementById("statusSummary").innerHTML = `\n                    <div class="status-row"><span>Approved</span><span>${approved}</span></div>\n                    <div class="status-row"><span>Pending</span><span>${pending}</span></div>\n                    <div class="status-row"><span>Rejected</span><span>${rejected}</span></div>`;\n                const body = document.getElementById("performanceTableBody");\n                body.innerHTML = sortedMusic.length ? sortedMusic.map(song => `\n                    <tr><td>${escapePerformanceText(song.title)}</td><td>${escapePerformanceText(song.album || "Single")}</td><td><span class="performance-status">${escapePerformanceText(song.status || "Unknown")}</span></td><td>${formatPerformanceNumber(song.streams)}</td><td>${formatPerformanceNumber(song.likes)}</td></tr>`).join("") : `<tr><td colspan="5">No uploaded music found.</td></tr>`;\n                message.textContent = `Performance updated • ${myMusic.length} song${myMusic.length === 1 ? "" : "s"}`;\n                message.style.color = "#888";\n            } catch (error) {\n                console.error("Performance error:", error);\n                message.textContent = "Unable to load performance data. Make sure the MELO backend is running.";\n                message.style.color = "#ff6b6b";\n            }\n        }\n\n        // =========================================
+        // UPDATE EXISTING COVER
+        // =========================================
+
+        async function updateCover(
+            event,
+            musicId
+        ) {
+
+            event.preventDefault();
+
+
+            const fileInput =
+                document.getElementById(
+                    `cover-${musicId}`
+                );
+
+
+            const message =
+                document.getElementById(
+                    `cover-message-${musicId}`
+                );
+
+
+            const coverFile =
+                fileInput.files[0];
+
+
+            if (!coverFile) {
+
+                message.textContent =
+                    "Please select a cover image.";
+
+                message.style.color =
+                    "#ff6b6b";
+
+                return;
+            }
+
+
+            if (
+                !coverFile.type.startsWith(
+                    "image/"
+                )
+            ) {
+
+                message.textContent =
+                    "Please select a valid image.";
+
+                message.style.color =
+                    "#ff6b6b";
+
+                return;
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "cover",
+                coverFile
+            );
+
+
+            message.textContent =
+                "Uploading cover...";
+
+
+            message.style.color =
+                "white";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `http://localhost:4971/api/music/${musicId}/cover`,
+                        {
+                            method: "PUT",
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.text();
+
+
+                if (response.ok) {
+
+                    message.textContent =
+                        "Cover updated successfully!";
+
+                    message.style.color =
+                        "#7CFF9B";
+
+
+                    loadArtistMusic();
+                    loadPerformance();
+
+                }
+
+                else {
+
+                    message.textContent =
+                        result;
+
+                    message.style.color =
+                        "#ff6b6b";
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                message.textContent =
+                    "Unable to connect to MELO server. Check that the backend is running.";
+
+                message.style.color =
+                    "#ff6b6b";
+            }
+
+        }
+
+    </script>
+
+</body>
+
+</html>

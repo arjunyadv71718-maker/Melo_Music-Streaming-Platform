@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MELO — Fan Messages</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .fan-page {
+            width: min(1000px, calc(100% - 32px));
+            margin: 36px auto 60px;
+        }
+
+        .fan-panel {
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+        }
+
+        .fan-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .fan-toolbar button,
+        .fan-actions button {
+            width: auto;
+            margin: 0 6px 6px 0;
+        }
+
+        .fan-message-card {
+            background: #171717;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        .fan-message-card.unread {
+            border-color: #8b5cf6;
+        }
+
+        .fan-message-meta {
+            color: #999;
+            font-size: 13px;
+            margin: 8px 0 14px;
+        }
+
+        .fan-message-content {
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        .fan-status {
+            min-height: 22px;
+            margin-top: 12px;
+            color: #aaa;
+        }
+
+        .fan-empty {
+            padding: 24px 0;
+            color: #999;
+        }
+
+        .fan-actions {
+            margin-top: 16px;
+        }
+
+        .fan-back {
+            display: inline-block;
+            margin-top: 18px;
+            color: inherit;
+        }
+
+        @media (max-width: 600px) {
+            .fan-panel {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body class="auth-page">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <nav class="navbar">
+        <div class="logo">MELO</div>
+        <button class="auth-button" type="button" onclick="logoutUser()">
+            Logout
+        </button>
+    </nav>
+
+    <main class="fan-page">
+        <section class="auth-card">
+            <div class="auth-logo">♪</div>
+            <h1>Fan Messages &amp; Feedback</h1>
+            <p class="auth-subtitle" id="artistGreeting">
+                Messages from your listeners
+            </p>
+
+            <div class="fan-panel">
+                <div class="fan-toolbar">
+                    <div>
+                        <h2 style="margin:0;">Your Inbox</h2>
+                        <p style="color:#999;margin:8px 0 0;">
+                            Messages sent to your artist profile.
+                        </p>
+                    </div>
+
+                    <button
+                        class="auth-button"
+                        id="refreshMessages"
+                        type="button"
+                    >
+                        Refresh
+                    </button>
+                </div>
+
+                <p id="fanStatus" class="fan-status" role="status">
+                    Loading messages...
+                </p>
+
+                <div id="fanMessageList" aria-live="polite"></div>
+            </div>
+
+            <a class="fan-back" href="artist.html">
+                ← Back to Artist Dashboard
+            </a>
+        </section>
+    </main>
+
+    <script src="auth.js"></script>
+    <script>
+        "use strict";
+
+        const API_BASE = "http://localhost:4971/api/fan-messages";
+        const currentUser = getLoggedInUser();
+
+        const statusElement = document.getElementById("fanStatus");
+        const listElement = document.getElementById("fanMessageList");
+        const refreshButton = document.getElementById("refreshMessages");
+
+        function escapeHTML(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function setStatus(message, isError = false) {
+            statusElement.textContent = message;
+            statusElement.style.color = isError ? "#ff7777" : "#aaa";
+        }
+
+        function formatDate(value) {
+            if (!value) return "Date unavailable";
+
+            const normalized = String(value).endsWith("Z")
+                ? String(value)
+                : String(value) + "Z";
+
+            const date = new Date(normalized);
+
+            if (Number.isNaN(date.getTime())) {
+                return String(value);
+            }
+
+            return date.toLocaleString();
+        }
+
+        function renderMessages(messages) {
+            if (!Array.isArray(messages) || messages.length === 0) {
+                listElement.innerHTML =
+                    '<p class="fan-empty">No fan messages yet. Messages sent to your artist profile will appear here.</p>';
+                return;
+            }
+
+            listElement.innerHTML = messages.map(message => {
+                const id = Number(message.id);
+                const unread = message.read !== true;
+
+                return `
+                    <article class="fan-message-card ${unread ? "unread" : ""}">
+                        <div class="fan-toolbar">
+                            <strong>${escapeHTML(message.senderName || "Listener")}</strong>
+                            <span style="color:${unread ? "#c4b5fd" : "#999"}">
+                                ${unread ? "Unread" : "Read"}
+                            </span>
+                        </div>
+
+                        <div class="fan-message-meta">
+                            <div>From: ${escapeHTML(message.senderEmail || "Not provided")}</div>
+                            <div>Received: ${escapeHTML(formatDate(message.createdAt))}</div>
+                        </div>
+
+                        <div class="fan-message-content">${escapeHTML(message.message)}</div>
+
+                        <div class="fan-actions">
+                            ${unread ? `
+                                <button
+                                    type="button"
+                                    class="auth-button"
+                                    data-action="read"
+                                    data-id="${id}"
+                                >Mark as Read</button>
+                            ` : ""}
+
+                            <button
+                                type="button"
+                                class="auth-button"
+                                data-action="delete"
+                                data-id="${id}"
+                            >Delete</button>
+                        </div>
+                    </article>
+                `;
+            }).join("");
+        }
+
+        async function loadFanMessages() {
+            listElement.innerHTML = "";
+            setStatus("Loading messages...");
+            refreshButton.disabled = true;
+
+            try {
+                const artistName = encodeURIComponent(
+                    String(currentUser.name || "").trim()
+                );
+
+                const response = await fetch(
+                    `${API_BASE}/artist/${artistName}`,
+                    { cache: "no-store" }
+                );
+
+                if (!response.ok) {
+                    throw new Error(`Server returned HTTP ${response.status}`);
+                }
+
+                const messages = await response.json();
+
+                if (!Array.isArray(messages)) {
+                    throw new Error("Unexpected response from the messages API.");
+                }
+
+                renderMessages(messages);
+
+                const unreadCount = messages.filter(item => item.read !== true).length;
+                setStatus(
+                    `${messages.length} message${messages.length === 1 ? "" : "s"} • ${unreadCount} unread`
+                );
+            } catch (error) {
+                console.error("Unable to load fan messages:", error);
+                listElement.innerHTML = "";
+                setStatus(
+                    "Could not load messages. Check that the Spring Boot backend is running on port 4971.",
+                    true
+                );
+            } finally {
+                refreshButton.disabled = false;
+            }
+        }
+
+        async function handleMessageAction(action, id) {
+            if (!Number.isSafeInteger(id) || id <= 0) {
+                setStatus("Invalid message ID.", true);
+                return;
+            }
+
+            if (action === "delete" &&
+                !window.confirm("Delete this fan message permanently?")) {
+                return;
+            }
+
+            try {
+                setStatus(action === "read" ? "Updating message..." : "Deleting message...");
+
+                const url = action === "read"
+                    ? `${API_BASE}/${id}/read`
+                    : `${API_BASE}/${id}`;
+
+                const response = await fetch(url, {
+                    method: action === "read" ? "PUT" : "DELETE"
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server returned HTTP ${response.status}`);
+                }
+
+                await loadFanMessages();
+            } catch (error) {
+                console.error("Message action failed:", error);
+                setStatus(
+                    "That action failed. Check the backend console and try again.",
+                    true
+                );
+            }
+        }
+
+        listElement.addEventListener("click", event => {
+            const button = event.target.closest("button[data-action]");
+            if (!button) return;
+
+            handleMessageAction(
+                button.dataset.action,
+                Number(button.dataset.id)
+            );
+        });
+
+        refreshButton.addEventListener("click", loadFanMessages);
+
+        if (!currentUser) {
+            window.location.href = "login.html";
+        } else if (String(currentUser.role).toLowerCase() !== "artist") {
+            window.location.href = "index.html";
+        } else {
+            document.getElementById("artistGreeting").textContent =
+                `Welcome, ${currentUser.name}. Here are messages sent to your artist profile.`;
+
+            loadFanMessages();
+        }
+    </script>
+</body>
+</html>
