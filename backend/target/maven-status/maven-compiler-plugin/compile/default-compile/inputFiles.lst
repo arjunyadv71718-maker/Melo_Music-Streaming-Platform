@@ -1,0 +1,17 @@
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\CorsConfig.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\controller\FanMessageController.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\controller\MusicController.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\controller\MusicLikeController.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\controller\SystemSettingController.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\controller\UserController.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\MeloBackendApplication.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\model\FanMessage.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\model\Music.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\model\MusicLike.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\model\SystemSetting.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\model\User.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\repository\FanMessageRepository.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\repository\MusicLikeRepository.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\repository\MusicRepository.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\repository\SystemSettingRepository.java
+C:\Users\ARJUN\Projex\melo-backend\src\main\java\melo_backend\repository\UserRepository.java

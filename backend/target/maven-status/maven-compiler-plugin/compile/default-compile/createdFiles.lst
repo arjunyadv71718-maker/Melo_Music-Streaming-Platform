@@ -1,0 +1,9 @@
+melo_backend\model\Music.class
+melo_backend\repository\MusicRepository.class
+melo_backend\repository\UserRepository.class
+melo_backend\MeloBackendApplication.class
+melo_backend\controller\MusicController.class
+CorsConfig$1.class
+CorsConfig.class
+melo_backend\model\User.class
+melo_backend\controller\UserController.class
